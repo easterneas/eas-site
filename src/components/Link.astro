@@ -1,0 +1,54 @@
+---
+// 
+const { to, text, size } = Astro.props
+
+function buttonSize (size) {
+  size = size || ''
+
+  switch (size) {
+    case 'title':
+      return 'link__title'
+    case 'large':
+      return 'link__large'
+    case 'small':
+      return 'link__small'
+    case '':
+      return 'link'
+    default:
+      throw new Error(JSON.stringify({ msg: 'Invalid size', to, text, size }))
+  }
+}
+---
+
+<a href={ to } class={ buttonSize(size) }>
+  { size === 'title' ? (<h3>{ text }</h3>) : text }
+</a>
+
+<style lang="scss">
+.link {
+  @apply px-2;
+  @apply py-1;
+}
+
+.link__title {
+  margin-bottom: 12px;
+}
+
+.link__title > h3 {
+  margin-bottom: 0;
+}
+
+.link__large {
+  @apply px-4;
+  @apply py-2;
+
+  @apply text-lg;
+}
+
+.link__small {
+  @apply px-1;
+  @apply py-0.5;
+
+  @apply text-sm;
+}
+</style>

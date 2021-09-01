@@ -1,0 +1,17 @@
+---
+export interface Props {
+  post: Object;
+}
+
+const { post } = Astro.props;
+
+---
+
+<section class="section__intro">
+  <h1 class="title">{post.title}</h1>
+  <h4 class="publish-date">{new Date(post.publishDate || post.created).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</h4>
+</section>
+
+<section class="section__content">
+  <slot />
+</section>

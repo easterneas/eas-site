@@ -1,0 +1,85 @@
+---
+
+import Logo from '../Logo.astro'
+
+const menu = [
+  { name: "Home", link: "/", type: "logo" },
+  { name: "About", link: "/about" },
+  { name: "Portfolio", link: "/portfolios" },
+  { name: "Blog", link: "/blog" },
+  { name: "Contact", link: "/contact" },
+]
+
+const currentURL = Astro.request.canonicalURL.href
+
+---
+
+<div class="nav">
+  <ul class="nav__menu">
+    { menu.map(item => {
+      if (item.type === 'logo') return (
+        <li class="nav__menu-item logo">
+          <a href={ item.link }><Logo /></a>
+        </li>
+      )
+
+      return (
+        <li class={ ["nav__menu-item", (currentURL.split('/').includes(item.link.split('/')[1]) ? 'active' : '')].join(' ') }>
+          <a href={ item.link }>{ item.name }</a>
+        </li>
+      )
+    }) }
+  </ul>
+</div>
+
+<style>
+.nav {
+  @apply bg-gray-900
+}
+
+.nav__menu {
+  @apply grid;
+  @apply gap-1;
+
+  list-style: none;
+  padding: 0;
+}
+
+.nav__menu-item a {
+  @apply p-4;
+  @apply block;
+  @apply text-white;
+  @apply text-center;
+}
+
+.nav__menu-item.active a {
+  color: #ffcc00;
+  font-weight: 700;
+}
+
+.nav__menu-item.active a::before,
+.nav__menu-item.logo a::before {
+  background-color: transparent;
+}
+
+.nav__menu-item.logo a:hover::before {
+  background-color: #333;
+}
+
+.nav__menu-item.active a:hover::before,
+.nav__menu-item a:hover::before {
+  background-color: #ffcc00;
+}
+
+.nav__menu-item.active a:hover,
+.nav__menu-item a:hover {
+  @apply text-black;
+}
+
+.nav__menu-item.logo a {
+  @apply p-4;
+  @apply block;
+  @apply text-white;
+  @apply text-center;
+}
+</style>

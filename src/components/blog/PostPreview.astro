@@ -1,0 +1,87 @@
+---
+import Link from '../Link.astro'
+
+export interface Props {
+  post: any;
+}
+
+const { post } = Astro.props;
+---
+<article class="post-preview">
+  <header>
+    <Link text={ post.title } to={ post.url } size={ "title" } />
+    <h3 class="publish-date">{new Date(post.publishDate || post.created).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</h3>
+  </header>
+
+  <main>
+    <p>{post.description || post.summary}</p>
+  </main>
+
+  <Link text={ "Selengkapnya" } to={ post.url } size={ "small" } />
+</article>
+
+<style>
+.content :global(main > * + *) {
+  margin-top: 1rem;
+}
+
+.post-preview {
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 4px solid var(--theme-divider);
+}
+
+.post-preview > main,
+.post-preview > header {
+  @apply mb-4
+}
+
+header {
+  @apply flex;
+  @apply flex-col;
+  @apply text-left;
+  @apply items-start;
+  @apply justify-center;
+}
+
+.title,
+.author,
+.publish-date {
+  margin: 0
+}
+
+.publish-date,
+.author {
+  @apply text-xs;
+  color: var(--theme-text-lighter);
+
+  font-weight: 400;
+}
+
+.title {
+  font-weight: 700;
+
+  margin-bottom: -12px;
+}
+
+.post-preview > main {
+  @apply mb-4;
+  @apply text-sm;
+}
+
+header > a::before {
+  display: inline-block;
+  margin-bottom: -12px;
+  /* border-bottom: #cc8800 solid 8px !important; */
+}
+
+header > a {
+  margin-bottom: 18px;
+}
+
+a.read-more {
+  @apply text-xs;
+  @apply px-2;
+  @apply py-1;
+}
+</style>

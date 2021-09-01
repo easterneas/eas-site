@@ -1,0 +1,67 @@
+---
+import Main from '../../../layouts/Main.astro'
+import BlogPost from '../../../components/blog/Post.astro';
+
+export async function getStaticPaths (context) {
+  const url = `http://localhost:10101`
+  const posts = await fetch(url).then(res => res.json())
+
+  const results = posts.map(post => ({
+    params: { slug: post.slug },
+    props: { ...post }
+  }))
+
+  return results
+}
+
+function processContent (content) {
+  switch (content.type) {
+    case 'paragraph':
+      return content.value?.map(value => (<p>{ value.content }</p>))
+    case 'image':
+      return (
+        <div>
+          <pre>{ JSON.stringify(content.value, null, 2) }</pre>
+
+          <img src={content.value.file.url} />
+
+          <span>
+            { content.value.caption[0].text.content }
+          </span>
+        </div>
+      )
+    case 'paragraph':
+      return content.value?.map(value => (<p>{ value.content }</p>))
+    case 'bulleted_list_item':
+      return (
+        <ul>
+          { content.value?.map(value => (<li>{ value.content }</li>)) }
+        </ul>
+      )
+  }
+}
+
+const { request } = Astro
+const { params, canonicalURL } = request
+
+const { slug } = params
+
+const post = await fetch(`http://localhost:10101/${slug}`).then(res => res.json())
+const { title, summary, contents, tags } = post
+
+---
+
+<Main meta={ post }>
+  <article>
+    <BlogPost class="content" post={post}>
+      { contents.map(content => (<div>{ processContent(content) }</div>)) }
+      <pre>{ JSON.stringify(post, null, 2) }</pre>
+    </BlogPost>
+  </article>
+</Main>
+
+<style>
+img {
+  width: 100%
+}
+</style>
