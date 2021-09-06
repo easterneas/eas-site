@@ -1,13 +1,28 @@
 ---
+import { Markdown } from 'astro/components';
+
 import Main from '../../../layouts/Main.astro'
 import BlogPost from '../../../components/blog/Post.astro';
+import { getData } from '../../../helpers/fetch';
 
 export async function getStaticPaths (context) {
-  const url = `http://localhost:10101`
-  const posts = await fetch(url).then(res => res.json())
+  const url = process.env.BRWR_POSTS_COLLECTION_URL
+  let allPosts = (await getData(url)).items.map(item => ({
+      ...(function (post) {
+        const meta = {}
+        const keys = Object.keys(post)
+        keys.forEach(key => ['content'].includes(key) ? '' : meta[key] = post[key])
+        return meta
+      })(item),
+      ...(function (post) {
+        const content = {}
+        Object.values(post.content).forEach(value => content[value.title] = value.value)
+        return content
+      })(item)
+    }))
 
-  const results = posts.map(post => ({
-    params: { slug: post.slug },
+  const results = allPosts.map(post => ({
+    params: { title: post.title },
     props: { ...post }
   }))
 
@@ -41,20 +56,15 @@ function processContent (content) {
   }
 }
 
-const { request } = Astro
+const { request, props: post } = Astro
 const { params, canonicalURL } = request
-
-const { slug } = params
-
-const post = await fetch(`http://localhost:10101/${slug}`).then(res => res.json())
-const { title, summary, contents, tags } = post
-
+const { postContent: content, lastUpdated, title } = post
 ---
 
 <Main meta={ post }>
   <article>
     <BlogPost class="content" post={post}>
-      { contents.map(content => (<div>{ processContent(content) }</div>)) }
+      <Markdown content={ content } />
       <pre>{ JSON.stringify(post, null, 2) }</pre>
     </BlogPost>
   </article>
