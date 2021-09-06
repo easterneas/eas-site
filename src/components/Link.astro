@@ -1,54 +1,138 @@
 ---
 // 
-const { to, text, size } = Astro.props
+const { to, text, size, type } = Astro.props
 
-function buttonSize (size) {
+function parseClass (options = { size, type }) {
+  const { size, type } = options
+  const res = []
+
+  res.push(setSize(size))
+  res.push(setType(type))
+
+  return res.join(' ')
+}
+
+function setType (type) {
+  type = type || ''
+
+  switch (type) {
+    case 'button':
+      return 'button'
+    default:
+      return 'link'
+  }
+}
+
+function setSize (size) {
   size = size || ''
 
   switch (size) {
     case 'title':
-      return 'link__title'
+      return 'title'
     case 'large':
-      return 'link__large'
+      return 'large'
     case 'small':
-      return 'link__small'
+      return 'small'
     case '':
-      return 'link'
+      return ''
     default:
       throw new Error(JSON.stringify({ msg: 'Invalid size', to, text, size }))
   }
 }
 ---
 
-<a href={ to } class={ buttonSize(size) }>
-  { size === 'title' ? (<h3>{ text }</h3>) : text }
+<a href={ to } class={ parseClass() }>
+  { size === 'title' ? (<h4>{ text }</h4>) : text }
 </a>
 
 <style lang="scss">
-.link {
-  @apply px-2;
-  @apply py-1;
-}
 
-.link__title {
-  margin-bottom: 12px;
-}
+a {
+  &.title {
+    margin-bottom: 12px;
 
-.link__title > h3 {
-  margin-bottom: 0;
-}
+    h4 { margin-bottom: 0; }
+  }
 
-.link__large {
-  @apply px-4;
-  @apply py-2;
+  &.large {
+    @apply px-4;
+    @apply py-2;
+  }
 
-  @apply text-lg;
-}
+  &.small {
+    @apply px-1;
+    @apply py-0.5;
 
-.link__small {
-  @apply px-1;
-  @apply py-0.5;
+    @apply text-xs;
+  }
 
-  @apply text-sm;
+  &.link, &.button {
+    position: relative;
+    z-index: 0;
+    display: inline-block;
+    color: white;
+  }
+
+  &.link {
+    transition: background-position 250ms cubic-bezier(0.23, 1, 0.32, 1);
+    padding: 0.05em 0.125em;
+    margin: -0.05em -0.125em;
+
+    background: linear-gradient(to right, white, white 50%, #ffcc00 50%);
+    background-size: 200% 100%;
+    background-position: 100%;
+    
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    &:hover {
+      background-position: 0 100%;
+    }
+  }
+
+  &.button {
+    text-decoration: none;
+    transition: color 120ms cubic-bezier(0.23, 1, 0.32, 1);
+
+    @apply px-2;
+    @apply py-1;
+    @apply text-sm;
+
+    &:hover,
+    &:focus {
+      color: rgba(0, 0, 0, 1);
+
+      &::before {
+        transform: scaleY(1);
+        background: var(--color-accent);
+      }
+    }
+
+    &:visited {
+      // color: var(--color-accent);
+      &:hover,
+      &:focus {
+        color: rgba(0, 0, 0, 1);
+      }
+    }
+
+    &::before {
+      transform-origin: bottom center;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      inset: 0;
+      background: var(--color-accent);
+      pointer-events: none;
+      transform: scaleY(0.05);
+      transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1), background 120ms cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: -1;
+    }
+  }
 }
 </style>
