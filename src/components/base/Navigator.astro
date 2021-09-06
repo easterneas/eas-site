@@ -16,70 +16,243 @@ const currentURL = Astro.request.canonicalURL.href
 
 <div class="nav">
   <ul class="nav__menu">
-    { menu.map(item => {
-      if (item.type === 'logo') return (
-        <li class="nav__menu-item logo">
-          <a href={ item.link }><Logo /></a>
-        </li>
-      )
+    {
+      menu.map((item, i) => {
+        if (item.type === 'logo') return (
+          <li class="nav__menu-item logo" style={`order: ${i}`}>
+            <a class="logo-desktop" href={ item.link }>
+              <Logo size="90" />
+            </a>
+            <a class="logo-mobile" href={ item.link }>
+              <Logo size="32" />
+            </a>
+          </li>
+        )
 
-      return (
-        <li class={ ["nav__menu-item", (currentURL.split('/').includes(item.link.split('/')[1]) ? 'active' : '')].join(' ') }>
-          <a href={ item.link }>{ item.name }</a>
-        </li>
-      )
-    }) }
+        return (
+          <li
+            class={
+              [
+                "nav__menu-item",
+                (currentURL.split('/').includes(item.link.split('/')[1]) ? 'active' : '')
+              ].join(' ')
+            }
+            style={`order: ${i}`}>
+            <a href={ item.link }>
+              { item.name }
+            </a>
+          </li>
+        )
+      })
+    }
   </ul>
 </div>
 
-<style>
+<style lang="scss">
 .nav {
-  @apply bg-gray-900
+  @apply bg-gray-900;
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+    height: 64px;
+    position: fixed;
+    bottom: 0;
+    @apply bg-gray-900;
+
+    z-index: 10;
+  }
+
+  &__menu {
+    @apply grid;
+    @apply gap-1;
+
+    @media screen and (max-width: 600px) {
+      @apply grid-flow-col;
+      @apply gap-0;
+      @apply grid-cols-5;
+      height: 64px;
+    }
+
+    list-style: none;
+    padding: 0;
+
+    &-item {
+      @media screen and (max-width: 600px) {
+        @apply justify-center;
+        @apply items-stretch;
+        display: flex;
+      }
+
+      a {
+        text-decoration: none;
+        @apply block;
+        @apply text-white;
+        @apply text-left;
+        @apply p-4;
+
+        transition: background-position 250ms cubic-bezier(0.23, 1, 0.32, 1);
+        background: linear-gradient(to left, transparent, transparent 50%, #fc0 50%);
+        background-size: 200% 200%;
+        background-position: 100% 0;
+
+        @media screen and (max-width: 600px) {
+          @apply p-0;
+          @apply text-center;
+          background: linear-gradient(to bottom, transparent, transparent 50%, #ffcc00 50%);
+          background-size: 200% 200%;
+          background-position: 0 0;
+
+          display: flex;
+          align-items: center;
+          width: 100%;
+          justify-content: center;
+        }
+
+        &:hover {
+          @apply text-black;
+          background-position: 0 0;
+
+          @media screen and (max-width: 600px) {
+            background-position: 0 100%;
+          }
+        }
+      }
+
+      &.active {
+        a {
+          color: #ffcc00;
+          font-weight: 700;
+
+          &:hover {
+            @apply text-black;
+            background-position: 0 0;
+
+            @media screen and (max-width: 600px) {
+              background-position: 0 100%;
+            }
+          }
+        }
+      }
+
+      &.logo {
+        @media screen and (max-width: 600px) {
+          order: 3 !important;
+          @apply justify-center;
+        }
+
+        a {
+          transition: background-position 250ms cubic-bezier(0.23, 1, 0.32, 1);
+          background: linear-gradient(to left, transparent, transparent 50%, #333 50%);
+          background-size: 200% 200%;
+          background-position: 100% 0;
+
+          &.logo-mobile {
+            @apply hidden;
+          }
+
+          :global(svg) {
+            display: block;
+            margin: 0 auto;
+          }
+
+          @media screen and (max-width: 600px) {
+            background: linear-gradient(to bottom, transparent, transparent 50%, #333 50%);
+            background-size: 200% 200%;
+            background-position: 0 0;
+
+            &.logo-desktop {
+              @apply hidden;
+            }
+
+            &.logo-mobile {
+              @apply flex;
+            }
+          }
+
+          &:hover {
+            background-position: 0 0;
+
+            @media screen and (max-width: 600px) {
+              background-position: 0 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  // @media screen and (max-width: 600px) {
+  //   &__menu {
+  //     @apply grid-flow-col;
+  //     @apply gap-0;
+  //     @apply grid-cols-5;
+  //     height: 80px;
+
+  //     &-item {
+  //       @apply justify-center;
+  //       @apply align-middle;
+  //       display: flex;
+
+  //       a {
+  //         text-decoration: none;
+  //         @apply p-4;
+  //         @apply block;
+  //         @apply text-white;
+  //         @apply text-center;
+
+  //         transition: background-position 250ms cubic-bezier(0.23, 1, 0.32, 1);
+  //         background: linear-gradient(to bottom, transparent, transparent 50%, #ffcc00 50%);
+  //         background-size: 200% 200%;
+  //         background-position: 0 0;
+
+  //         display: flex;
+  //         align-items: center;
+  //         width: 100%;
+  //         justify-content: center;
+
+  //         &:hover {
+  //           background-position: 0 100%;
+  //         }
+  //       }
+
+  //       &.active {
+  //         a {
+  //           color: #ffcc00;
+  //           font-weight: 700;
+
+  //           &:hover {
+  //             background-position: 0 100%;
+  //           }
+  //         }
+  //       }
+
+  //       &.logo {
+  //         order: 3 !important;
+
+  //         a {
+  //           transition: background-position 250ms cubic-bezier(0.23, 1, 0.32, 1);
+  //           background: linear-gradient(to bottom, transparent, transparent 50%, #333 50%);
+  //           background-size: 200% 200%;
+  //           background-position: 0 0;
+
+  //           &:hover {
+  //             background-position: 0 100%;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 }
 
-.nav__menu {
-  @apply grid;
-  @apply gap-1;
+// @media screen and (max-width: 600px) {
 
-  list-style: none;
-  padding: 0;
-}
+//   .nav__menu-item.logo {
+//     order: 3 !important;
+//   }
 
-.nav__menu-item a {
-  @apply p-4;
-  @apply block;
-  @apply text-white;
-  @apply text-center;
-}
-
-.nav__menu-item.active a {
-  color: #ffcc00;
-  font-weight: 700;
-}
-
-.nav__menu-item.active a::before,
-.nav__menu-item.logo a::before {
-  background-color: transparent;
-}
-
-.nav__menu-item.logo a:hover::before {
-  background-color: #333;
-}
-
-.nav__menu-item.active a:hover::before,
-.nav__menu-item a:hover::before {
-  background-color: #ffcc00;
-}
-
-.nav__menu-item.active a:hover,
-.nav__menu-item a:hover {
-  @apply text-black;
-}
-
-.nav__menu-item.logo a {
-  @apply p-4;
-  @apply block;
-  @apply text-white;
-  @apply text-center;
-}
+//   .nav__menu-item a {
+//   }
+// }
 </style>
