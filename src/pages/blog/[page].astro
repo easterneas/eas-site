@@ -1,25 +1,29 @@
 ---
 // Component Imports
-
 import Main from '../../layouts/Main.astro';
+
 import Pagination from '../../components/partials/Pagination.astro';
 import PostPreview from '../../components/blog/PostPreview.astro';
 
-export async function getStaticPaths ({ paginate }) {
-  // Data Fetching: List all Markdown posts in the repo.
-  let allPosts = [
-    ...Astro.fetchContent('./posts/*.md'),
-    ...(await fetch(`http://localhost:10101`).then(res => res.json()))
-      .map(post => ({ ...post, url: `/blog/post/${post.slug}` }))
-  ];
-  allPosts = allPosts.sort(
-    (a, b) => new Date(b.publishDate || b.created) - new Date(a.publishDate || a.created)
-  );
+import store from '../../store';
 
-  // Full Astro Component Syntax:
-  // https://docs.astro.build/core-concepts/astro-components/
+export async function getStaticPaths ({ paginate, rss }) {
+  const { posts: postCollection } = store
+  const posts = await postCollection.getPosts()
 
-  return paginate(allPosts, { pageSize: 5 })
+  rss({
+    title: 'Eas',
+    description: 'Full stack developer. Mentor. Loves tinkering all things tech.',
+    customData: '<language>en-us</language>',
+    items: posts.map(post => ({
+      title: post.title,
+      decription: post.summary,
+      link: ``,
+      pubDate: post.created,
+    }))
+  })
+
+  return paginate(posts, { pageSize: 10 })
 }
 
 const { page } = Astro.props
@@ -27,8 +31,7 @@ const { data: allPosts, ...pagination } = page
 
 const meta = {
   title: "Blog",
-  description: "Ini adalah jurnal gw, dan apa yang gw pelajari tentang tech dan coding.",
-  permalink: "https://example.com/"
+  description: "You're reading my <s>diary</s> digital, living journal of all things tech and programming.",
 }
 
 ---
