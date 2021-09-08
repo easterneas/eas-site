@@ -1,14 +1,16 @@
 {
-  "name": "@example/blog",
+  "name": "@eas/blog",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
+    "start": "clear; astro dev --verbose",
     "build": "astro build"
   },
   "devDependencies": {
+    "@astrojs/renderer-preact": "^0.2.1",
+    "@snowpack/plugin-dotenv": "^2.2.0",
     "astro": "^0.19.1",
-    "@astrojs/renderer-preact": "^0.2.1"
+    "tailwindcss": "^2.2.8"
   }
 }
