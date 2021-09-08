@@ -37,29 +37,14 @@ const meta = {
 ---
 
 <Main meta={meta}>
-  <section class="section__intro">
+  <section>
     <h1 class="latest">{meta.title}</h1>
     <p>{meta.description}</p>
   </section>
 
-  <section class="section__content">
+  <section>
     {allPosts.map(p => <PostPreview post={p} />)}
-    <hr />
+
     <Pagination paginate={ pagination } />
   </section>
 </Main>
-
-<style>
-hr {
-  @apply my-4;
-  @apply border-gray-700;
-}
-
-.section__intro {
-  @apply pb-24;
-}
-
-.section__content {
-  @apply pb-16;
-}
-</style>
