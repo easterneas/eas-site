@@ -15,17 +15,19 @@ const url = `/blog/post/${title}`
 ---
 <article class="post-preview">
   <header>
-    <Link text={ post.title } to={ post.url } size={ "title" } />
-    <h3 class="last-updated">Last updated: {new Date(post.publishDate || lastUpdated).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</h3>
+    <Link text={ title } to={ url } size={ "title" } />
+    { created ? (
+      <h3 class="last-updated">
+        Posted: {formatDate(created)}
+      </h3>
+    ) : '' }
   </header>
 
   <main>
-    <p>{post.description || summary || '(No summary provided)'}</p>
+    <p>{ description || summary || '(No summary provided)' }</p>
   </main>
 
-  <pre>{ JSON.stringify(post, null, 2) }</pre>
-
-  <Link text={ "Read more..." } type={ "button" } to={ post.url } />
+  <Link text={ "Read more..." } type={ "button" } to={ url } />
 </article>
 
 <style lang="scss">
