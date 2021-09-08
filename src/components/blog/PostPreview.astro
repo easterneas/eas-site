@@ -10,8 +10,8 @@ function formatDate (date) {
 }
 
 const { post } = Astro.props;
-const { lastUpdated } = post
-const { tags, created, summary } = post.content
+const { title, description, publishDate, tags, created, summary, lastUpdated } = post
+const url = `/blog/post/${title}`
 ---
 <article class="post-preview">
   <header>
