@@ -17,70 +17,33 @@ let permalink = 'https://example.com/';
 let allPosts = Astro.fetchContent('./posts/*.md');
 allPosts = allPosts.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
 
-// Full Astro Component Syntax:
-// https://docs.astro.build/core-concepts/astro-components/
 ---
-<html lang="en">
-  <head>
-    <BaseHead title={title} description={description} permalink={permalink} />
-    <link rel="stylesheet" href="/blog.css" />
-
-    <style>
-      body {
-        width: 100%;
-        display: grid;
-        grid-template-rows: 3.5rem 1fr;
-        --gutter: 0.5rem;
-        --doc-padding: 2rem;
-      }
-
-      header {
-        width: 100%;
-        height: 100%;
-        background-color: var(--theme-bg-offset);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .content {
-        margin-top: 4rem;
-        margin-bottom: 8rem;
-      }
-
-      .content :global(main > * + *) {
-        margin-top: 1rem;
-      }
-
-      .intro {
-        padding-bottom: 4rem;
-        margin-bottom: 2rem;
-        border-bottom: 4px solid var(--theme-divider);
-      }
-
-      .intro > * {
-        margin: 0;
-      }
-
-      .latest {
-        font-size: 2.5rem;
-        font-weight: 700;
-      }
-    </style>
-  </head>
-
-  <body>
-    <BlogHeader />
-    <div class="layout">
-      <article class="content">
-        <section class="intro">
-          <h1 class="latest">{title}</h1>
-          <p>{description}</p>
-        </section>
-        <section>
-          {allPosts.map(p => <BlogPostPreview post={p} />)}
-        </section>
-      </article>
-    </div>
-  </body>
-</html>
+<Main meta={ meta }>
+  <section>
+    <h1>Oh, hi there! <u>Eas</u> here.</h1>
+    <p>
+      I'm Andreas, but you can just call me Eas.
+    </p>
+    <p>
+      I'm a full-stack developer, heavily towards backend development. I love experimenting all things tech, and trying something new to solve problems.
+    </p>
+    <p>
+      You can <Link text="learn more about me here" to="/about" />, in which I'll tell you more about me.
+    </p>
+  </section>
+  <section>
+    <h3>Portfolios</h3>
+    <p>I love making apps, and here's the latest 3 projects:</p>
+    <p>[==LATEST 3 PROJECTS==]</p>
+    <p><Link text="My complete list of portfolios" type="button" to="/portfolios" /></p>
+  </section>
+  <section>
+    <h3>Blog</h3>
+    {
+      posts.map(post => (
+        <PostPreview post={post} />
+      ))
+    }
+    <Link to="/blog" text="My other posts" type="button" size="large" />
+  </section>
+</Main>
