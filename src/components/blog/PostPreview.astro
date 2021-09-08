@@ -5,6 +5,10 @@ export interface Props {
   post: Object;
 }
 
+function formatDate (date) {
+  return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
 const { post } = Astro.props;
 const { lastUpdated } = post
 const { tags, created, summary } = post.content
