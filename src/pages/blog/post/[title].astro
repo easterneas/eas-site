@@ -1,59 +1,20 @@
 ---
-import { Markdown } from 'astro/components';
+import { Markdown } from 'astro/components'
+
+import store from '../../../store'
 
 import Main from '../../../layouts/Main.astro'
-import BlogPost from '../../../components/blog/Post.astro';
-import { getData } from '../../../helpers/fetch';
+import BlogPost from '../../../components/blog/Post.astro'
+import { getData } from '../../../helpers/fetch'
 
-export async function getStaticPaths (context) {
-  const url = process.env.BRWR_POSTS_COLLECTION_URL
-  let allPosts = (await getData(url)).items.map(item => ({
-      ...(function (post) {
-        const meta = {}
-        const keys = Object.keys(post)
-        keys.forEach(key => ['content'].includes(key) ? '' : meta[key] = post[key])
-        return meta
-      })(item),
-      ...(function (post) {
-        const content = {}
-        Object.values(post.content).forEach(value => content[value.title] = value.value)
-        return content
-      })(item)
-    }))
-
-  const results = allPosts.map(post => ({
+export async function getStaticPaths ({ paginate, rss }) {
+  const { posts: postCollection } = store
+  const posts = (await postCollection.getPosts()).map(post => ({
     params: { title: post.title },
     props: { ...post }
   }))
 
-  return results
-}
-
-function processContent (content) {
-  switch (content.type) {
-    case 'paragraph':
-      return content.value?.map(value => (<p>{ value.content }</p>))
-    case 'image':
-      return (
-        <div>
-          <pre>{ JSON.stringify(content.value, null, 2) }</pre>
-
-          <img src={content.value.file.url} />
-
-          <span>
-            { content.value.caption[0].text.content }
-          </span>
-        </div>
-      )
-    case 'paragraph':
-      return content.value?.map(value => (<p>{ value.content }</p>))
-    case 'bulleted_list_item':
-      return (
-        <ul>
-          { content.value?.map(value => (<li>{ value.content }</li>)) }
-        </ul>
-      )
-  }
+  return posts
 }
 
 const { request, props: post } = Astro
