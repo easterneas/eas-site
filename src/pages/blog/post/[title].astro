@@ -26,7 +26,6 @@ const { postContent: content, lastUpdated, title } = post
   <article>
     <BlogPost class="content" post={post}>
       <Markdown content={ content } />
-      <pre>{ JSON.stringify(post, null, 2) }</pre>
     </BlogPost>
   </article>
 </Main>
