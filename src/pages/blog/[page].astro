@@ -18,7 +18,7 @@ export async function getStaticPaths ({ paginate, rss }) {
     items: posts.map(post => ({
       title: post.title,
       decription: post.summary,
-      link: ``,
+      link: `${process.env.SITE_URL}/blog/post/${post.title}`,
       pubDate: post.created,
     }))
   })
