@@ -1,21 +1,18 @@
 ---
 // Component Imports
-import BaseHead from '../components/BaseHead.astro';
-import BlogHeader from '../components/BlogHeader.astro';
-import BlogPostPreview from '../components/BlogPostPreview.astro';
+import Main from '../layouts/Main.astro'
+import PostPreview from '../components/blog/PostPreview.astro'
+import Link from '../components/Link.astro'
 
+import store from '../store'
 
-// Component Script:
-// You can write any JavaScript/TypeScript that you'd like here.
-// It will run during the build, but never in the browser.
-// All variables are available to use in the HTML template below.
-let title = 'Example Blog';
-let description = 'The perfect starter for your perfect blog.';
-let permalink = 'https://example.com/';
+let posts = await store.posts.getPosts()
 
-// Data Fetching: List all Markdown posts in the repo.
-let allPosts = Astro.fetchContent('./posts/*.md');
-allPosts = allPosts.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+const meta = {
+  title: "Example Blog",
+  description: "Full stack developer. Mentor. Loves tinkering all things tech.",
+  permalink: "https://example.com"
+}
 
 ---
 <Main meta={ meta }>
