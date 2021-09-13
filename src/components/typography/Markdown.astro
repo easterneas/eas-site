@@ -1,0 +1,28 @@
+---
+import { Code } from 'astro/components'
+import { renderMarkdown } from '@astrojs/markdown-support'
+
+export interface Props {
+  content: String;
+}
+
+const { content: rawContent } = Astro.props
+const contents = rawContent.split('```')
+---
+
+{
+  contents.map((c, i) => {
+    if (i % 2 === 0) return renderMarkdown(c).then(res => res.content)
+
+    let codeContents = c.split('\r\n')
+    let lang: String
+
+    if(codeContents[0] !== '') lang = codeContents[0]
+
+    codeContents = codeContents.slice(1, -1).join('\n')
+
+    return (
+      <Code code={codeContents} lang={lang} theme="dracula" />
+    )
+  })
+}
