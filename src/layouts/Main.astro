@@ -80,8 +80,83 @@ body {
     order: 2;
     display: grid;
 
+    :global(h1) {
+      @apply mt-4;
+      @apply mb-2;
+      @apply text-4xl;
+    }
+    :global(h2) {
+      @apply mt-4;
+      @apply mb-2;
+      @apply text-3xl;
+    }
+    :global(h3) {
+      @apply mt-4;
+      @apply mb-2;
+      @apply text-2xl;
+    }
+    :global(h4) {
+      @apply mt-4;
+      @apply mb-2;
+      @apply text-xl;
+
+    }
+    :global(h5) {
+      @apply mt-4;
+      @apply mb-2;
+      @apply text-sm;
+      @apply font-normal;
+    }
+    :global(h6) {
+      @apply mt-4;
+      @apply mb-2;
+      @apply text-xs;
+    }
+    :global(p), :global(code), :global(pre), :global(li) {
+      line-height: 1.3;
+      @apply py-2;
+    }
 
     @media screen and (max-width: 600px) {
+      :global(h1) {
+        @apply mt-4;
+        @apply mb-2;
+        @apply text-4xl;
+
+      }
+      :global(h2) {
+        @apply mt-4;
+        @apply mb-2;
+        @apply text-2xl;
+
+      }
+      :global(h3) {
+        @apply mt-4;
+        @apply mb-2;
+        @apply text-xl;
+
+      }
+      :global(h4) {
+        @apply mt-4;
+        @apply mb-2;
+        @apply font-normal;
+
+      }
+      :global(h5) {
+        @apply mt-4;
+        @apply mb-2;
+        @apply text-sm;
+        @apply font-normal;
+
+      }
+      :global(h6) {
+        @apply mt-4;
+        @apply mb-2;
+        @apply text-xs;
+
+      }
+
+      width: 100vw;
       display: block;
       height: calc(100vh - 64px);
 
