@@ -35,14 +35,14 @@ export async function getStaticPaths ({ paginate, rss }) {
 }
 ---
 
-<Main meta={meta}>
+<Main meta={ pageMeta }>
   <section>
-    <h1 class="latest">{meta.title}</h1>
-    <p>{meta.description}</p>
+    <h1 class="latest">{ pageMeta.title }</h1>
+    <p>{ pageMeta.description }</p>
   </section>
 
   <section>
-    {allPosts.map(p => <PostPreview post={p} />)}
+    { allPosts.map(p => <PostPreview post={ p } />) }
 
     <Pagination paginate={ pagination } />
   </section>
