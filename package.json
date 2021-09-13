@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "start": "clear; astro dev --verbose",
+    "dev": "astro dev --verbose",
+    "start": "clear; astro dev",
     "build": "astro build"
   },
   "devDependencies": {
