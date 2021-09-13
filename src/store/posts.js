@@ -7,7 +7,9 @@ async function getCollection () {
 export default {
   getCollection,
   getPosts: async function () {
-    const posts = (await getCollection()).items.map(item => {
+    const { items: posts } = await getCollection()
+
+    return posts.map(item => {
       const meta = {}
       const content = {}
       const keys = Object.keys(item)
@@ -18,8 +20,6 @@ export default {
 
       return { ...meta, ...content }
     }).sort((a, b) => new Date(b.publishDate || b.created) - new Date(a.publishDate || a.created))
-
-    return posts
   }
 }
 
