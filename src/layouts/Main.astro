@@ -32,9 +32,9 @@ export default interface Props {
   content: Object | null
 }
 ---
-<html lang={ lang || 'en' }>
+<html lang={ meta.lang }>
   <head>
-    <Head title={title} description={description} permalink={permalink} />
+    <Head title={ meta.title } description={ meta.description } permalink={ meta.permalink } />
   </head>
 
   <body>
