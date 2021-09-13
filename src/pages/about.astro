@@ -1,17 +1,79 @@
 ---
+import { renderMarkdown } from '@astrojs/markdown-support'
+
 import Main from '../layouts/Main.astro'
 import Link from '../components/Link.astro'
 
-const meta = {
-  title: "Example Blog",
+const pageMeta = {
+  title: 'About Me',
   description: "Full stack developer. Mentor. Loves tinkering all things tech.",
-  permalink: "https://example.com"
 }
+
+const markdownContent = `
+# About Me
+
+Hi, it's me, Andreas... or just call me Eas.
+
+I love coding, tinkering, and solving each problems I found.
+
+It started when I was 4, and at that time, I made my parent's computer unusable.
+Since then, I wanted to learn more about computers, and I started to love it.
+
+When I was 14, a family relative of mine lent me
+[this book](https://www.goodreads.com/book/show/3402859-joomla-website-magic)
+of how to manage CMS sites using Joomla! CMS. With that book,
+I started to learn how websites work.
+
+But it was so hard due to the Internet connection was so expensive and scarce
+at that time. So I decided to borrow his computer, and try some plugins
+mentioned on the book... in exchange of doing his favor: packing soy milk
+(it was delicious, by the way).
+
+Years later, I started to learn PHP as my first programming language to learn
+more about how websites (and later, web apps) work. Now, I'm starting to create
+solutions for real-life problems by developing sites, apps, and platforms,
+starting with the small ones. You can find all of these within
+[my portfolios page](/portfolios).
+
+I also currently work as a full-time teacher at [Hacktiv8](https://hacktiv8.com),
+sharing all of what I've learned so far about JavaScript. But if there's something
+that I found outside of my teaching job, I'll share it here -- I'll try to be
+as concise as possible.
+
+If you want to reach out to me, [feel free to contact me](/contact). I'll be
+happy to reply you back!
+`
+
+const Markdown = await renderMarkdown(markdownContent)
 ---
 
-<Main meta={meta}>
-  <section>
-    <h1>Coming soon!</h1>
-    <Link text="Go Back" to="/" />
+<Main meta={ pageMeta }>
+  <section class="markdown">
+    <Link text="Go Back" to="/" size="" />
+    { Markdown.content }
   </section>
 </Main>
+
+<style lang="scss">
+section.markdown {
+  :global(a) {
+    position: relative;
+    z-index: 0;
+    color: white;
+
+    transition: background-position 250ms cubic-bezier(0.23, 1, 0.32, 1);
+
+    background: linear-gradient(to right, white, white 50%, #ffcc00 50%);
+    background-size: 200% 100%;
+    background-position: 100%;
+    
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    &:hover {
+      background-position: 0 100%;
+    }
+  }
+}
+</style>
