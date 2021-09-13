@@ -1,4 +1,8 @@
 ---
+import Md from '../typography/Markdown.astro'
+import Header from './partials/Header.astro'
+import Tag from './partials/Tag.astro'
+
 export interface Props {
   post: Object;
 }
@@ -16,14 +20,31 @@ type Post = {
 }
 
 const post: Post = Astro.props.post;
+const { title: postTitle, created, tags, postContent } = post;
 
 ---
 
-<section class="section__intro">
-  <h1 class="title">{post.title}</h1>
-  <h4 class="publish-date">{new Date(post.publishDate || post.created).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</h4>
-</section>
+<Header title={ postTitle } date={ created } />
 
-<section class="section__content">
+<div class="section__content">
+  <Md content={ postContent } />
   <slot />
-</section>
+  {
+    tags.length > 0
+    && (
+      <h5 class="tags">Listed under</h5>
+    )
+  }
+  {
+    tags.length > 0
+    && (
+      <div>
+        {
+          tags.map(tag => (
+            <Tag name={ tag }/>
+          ))
+        }
+      </div>
+    )
+  }
+</div>
