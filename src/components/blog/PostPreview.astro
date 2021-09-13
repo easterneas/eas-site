@@ -1,33 +1,28 @@
 ---
 import Link from '../Link.astro'
+import DateBlock from '../blocks/DateBlock.astro'
 
 export interface Props {
   post: Object;
 }
 
-function formatDate (date) {
-  return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-}
-
 const { post } = Astro.props;
 const { title, description, publishDate, tags, created, summary, lastUpdated } = post
 const url = `/blog/post/${title}`
+
 ---
 <article class="post-preview">
-  <header>
+  {
+    created !== null
+    ? (<DateBlock date={ created } />)
+    : ''
+  }
+
+  <main class={ created === null && 'full-width' }>
     <Link text={ title } to={ url } size={ "title" } />
-    { created ? (
-      <h3 class="last-updated">
-        Posted: {formatDate(created)}
-      </h3>
-    ) : '' }
-  </header>
-
-  <main>
     <p>{ description || summary || '(No summary provided)' }</p>
+    <Link text={ "Read more..." } type={ "button" } to={ url } />
   </main>
-
-  <Link text={ "Read more..." } type={ "button" } to={ url } />
 </article>
 
 <style lang="scss">
@@ -36,13 +31,42 @@ const url = `/blog/post/${title}`
 }
 
 .post-preview {
-  @apply pb-8;
-  @apply mb-8;
-  @apply mt-4;
-  border-bottom: 2px solid;
-  @apply border-gray-800;
+  margin-bottom: 2rem !important;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid;
+  @apply border-b-gray-600;
+
+  @apply flex;
+  @apply flex-auto;
+  flex-basis: 100px;
+
+  @media screen and (max-width: 600px) {
+    flex-basis: 60px;
+    margin-bottom: 2rem !important;
+    padding-bottom: 2rem;
+  }
 
   main, header { @apply mb-4; }
+
+  main {
+    @apply px-4;
+
+    margin: 0 !important;
+    max-width: calc(100% - 100px);
+
+    &.full-width{
+      @apply pl-0;
+      max-width: 100%;
+    }
+
+    @media screen and (max-width: 600px) {
+      max-width: calc(100% - 60px);
+    }
+
+    &> p {
+      @apply mb-4;
+    }
+  }
 }
 
 header {
