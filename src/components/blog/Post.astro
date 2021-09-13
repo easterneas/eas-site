@@ -3,7 +3,19 @@ export interface Props {
   post: Object;
 }
 
-const { post } = Astro.props;
+type Post = {
+  key: string,
+  title: string,
+  tags: string[],
+  updated: string,
+  slug: string,
+  lastUpdated: string,
+  postContent: string,
+  created: string,
+  summary: string
+}
+
+const post: Post = Astro.props.post;
 
 ---
 
