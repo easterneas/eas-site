@@ -1,0 +1,23 @@
+---
+export default interface Props {
+  name: string,
+}
+
+const name = Astro.props.name
+---
+
+<abbr title="Posts with tags coming soon!">
+  <span class="tag">
+    { name }
+  </span>
+</abbr>
+
+<style lang="scss">
+.tag {
+  display: inline-block;
+  margin-right: 5px;
+  padding: 0 5px;
+  background-color: #fc0;
+  color: #000;
+}
+</style>
