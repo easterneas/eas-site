@@ -6,16 +6,18 @@ import Link from '../components/Link.astro'
 
 import store from '../store'
 
-let posts = await store.posts.getPosts()
-
-const meta = {
-  title: "Example Blog",
+const pageMeta = {
   description: "Full stack developer. Mentor. Loves tinkering all things tech.",
   permalink: "https://example.com"
 }
 
+let posts = await store.posts.getPosts()
+
+posts = posts.slice(0, 3)
+
 ---
-<Main meta={ meta }>
+
+<Main meta={ pageMeta }>
   <section>
     <h1>Oh, hi there! <code>Eas</code> here.</h1>
     <p>
