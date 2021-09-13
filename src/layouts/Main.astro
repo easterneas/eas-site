@@ -92,10 +92,16 @@ body {
       }
     }
 
-    :global(*) {
+    &> :global(*) {
+      width: calc(100vw - 130px);
       margin: 0 auto;
       @apply mt-4;
       // width: 100%;
+      padding: 1rem calc(25vw - 50px);
+
+      @media screen and (max-width: 600px) {
+        padding: 1rem calc(5vw - 50px);
+      }
     }
 
     :global(section) {
