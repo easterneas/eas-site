@@ -21,10 +21,10 @@ const currentURL: string = Astro.request.canonicalURL.href
         if (item.type === 'logo') return (
           <li class="nav__menu-item logo" style={`order: ${i}`}>
             <a class="logo-desktop" href={ item.link }>
-              <Logo size="90" />
+              <Logo size={ 90 } />
             </a>
             <a class="logo-mobile" href={ item.link }>
-              <Logo size="32" />
+              <Logo size={ 32 } />
             </a>
           </li>
         )
@@ -34,7 +34,7 @@ const currentURL: string = Astro.request.canonicalURL.href
             class={
               [
                 "nav__menu-item",
-                (currentURL.split('/').includes(item.link.split('/')[1]) ? 'active' : '')
+                currentURL.split('/').includes(item.link.split('/')[1] ? 'active' : '')
               ].join(' ')
             }
             style={`order: ${i}`}>
