@@ -4,17 +4,34 @@ import Head from '../components/base/Head.astro';
 import Navigator from '../components/base/Navigator.astro';
 import Footer from '../components/base/Footer.astro';
 
-// console.log(Astro.props)
+type Meta = {
+  title: string,
+  description: string,
+  publishDate: Date | string,
+  author: string,
+  heroImage: string,
+  permalink: string,
+  alt: string,
+  lang: string
+}
 
-const { meta, content } = Astro.props;
-const title       = meta ? meta.title : content.title,
-      description = meta ? meta.description : content.description,
-      publishDate = meta ? meta.publishDate : content.publishDate,
-      author      = meta ? meta.author : content.author,
-      heroImage   = meta ? meta.heroImage : content.heroImage,
-      permalink   = meta ? meta.permalink : content.permalink,
-      alt         = meta ? meta.alt : content.alt,
-      lang        = meta ? meta.lang : content.lang
+const pageMeta: Meta = Astro.props.meta
+const contentMeta: Meta = Astro.props.content
+const meta = {
+  title      : pageMeta ? pageMeta.title : contentMeta.title,
+  description: pageMeta ? pageMeta.description : contentMeta.description,
+  publishDate: pageMeta ? pageMeta.publishDate : contentMeta.publishDate,
+  author     : pageMeta ? pageMeta.author : contentMeta.author,
+  heroImage  : pageMeta ? pageMeta.heroImage : contentMeta.heroImage,
+  permalink  : pageMeta ? pageMeta.permalink : contentMeta.permalink,
+  alt        : pageMeta ? pageMeta.alt : contentMeta.alt,
+  lang       : pageMeta ? pageMeta.lang : contentMeta.lang
+}
+
+export default interface Props {
+  meta: Meta,
+  content: Object | null
+}
 ---
 <html lang={ lang || 'en' }>
   <head>

@@ -1,5 +1,25 @@
 ---
-const { paginate } = Astro.props
+export default interface Props {
+  paginate: Object
+}
+
+type Url = {
+  current: String,
+  next: String,
+  prev: String
+}
+
+type Pagination = {
+  start: number,
+  end: number,
+  size: number,
+  total: number,
+  currentPage: number,
+  lastPage: number,
+  url: Url
+}
+
+const paginate: Pagination = Astro.props.paginate
 
 const pagination = (p) => {
   const pages = new Array(p.lastPage).fill(true)

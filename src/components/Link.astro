@@ -2,6 +2,12 @@
 // 
 const { to, text, size, type } = Astro.props
 
+export default interface Props {
+  to: string,
+  text: string,
+  size: string
+}
+
 function parseClass (options = { size, type }) {
   const { size, type } = options
   const res = []

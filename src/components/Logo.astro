@@ -1,6 +1,10 @@
 ---
 let { size } = Astro.props
 
+export default interface Props {
+  size: number
+}
+
 if(!size) size = 32
 ---
 
