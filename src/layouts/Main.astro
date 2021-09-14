@@ -6,12 +6,12 @@ import Footer from '../components/base/Footer.astro';
 type Meta = {
   title: string,
   description: string,
-  publishDate: Date | string,
-  author: string,
-  heroImage: string,
-  permalink: string,
-  alt: string,
-  lang: string
+  publishDate?: Date | string,
+  author?: string,
+  heroImage?: string,
+  permalink?: string,
+  alt?: string,
+  lang?: string
 }
 
 const pageMeta: Meta = Astro.props.meta
