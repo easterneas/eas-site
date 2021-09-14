@@ -160,7 +160,7 @@ body {
       display: block;
       height: calc(100vh - 64px);
 
-      padding: 4rem 12.5vw 8rem 12.5vw;
+      padding: 4rem 10vw 8rem 10vw;
 
       :global(footer) {
         display: none;
@@ -174,7 +174,8 @@ body {
       padding: 1rem calc(25vw - 50px);
 
       @media screen and (max-width: 600px) {
-        padding: 1rem calc(5vw - 50px);
+        @apply p-0;
+        width: 100%;
       }
     }
 
