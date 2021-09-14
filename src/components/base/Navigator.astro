@@ -34,7 +34,7 @@ const currentURL: string = Astro.request.canonicalURL.href
             class={
               [
                 "nav__menu-item",
-                currentURL.split('/').includes(item.link.split('/')[1] ? 'active' : '')
+                currentURL.split('/').includes(item.link.split('/')[1]) ? 'active' : ''
               ].join(' ')
             }
             style={`order: ${i}`}>
