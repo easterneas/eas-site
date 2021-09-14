@@ -11,14 +11,14 @@ const { title, description, publishDate, tags, created, summary, lastUpdated } =
 const url = `/blog/post/${title}`
 
 ---
-<article class="post-preview">
+<article class={ [ "post-preview", created === null && 'full-width' ].join(' ') }>
   {
     created !== null
     ? (<DateBlock date={ created } />)
     : ''
   }
 
-  <main class={ created === null && 'full-width' }>
+  <main>
     <Link text={ title } to={ url } size={ "title" } />
     <p>{ description || summary || '(No summary provided)' }</p>
     <Link text={ "Read more..." } type={ "button" } to={ url } />
@@ -36,73 +36,28 @@ const url = `/blog/post/${title}`
   border-bottom: 1px solid;
   @apply border-b-gray-600;
 
-  @apply flex;
-  @apply flex-auto;
-  flex-basis: 100px;
+  @apply grid;
+  grid-template-columns: 100px 1fr;
+
+  &.full-width {
+    grid-template-columns: 1fr;
+  }
 
   @media screen and (max-width: 600px) {
-    flex-basis: 60px;
+    grid-template-columns: 60px 1fr;
     margin-bottom: 2rem !important;
     padding-bottom: 2rem;
   }
 
-  main, header { @apply mb-4; }
-
   main {
+    @apply mb-4;
     @apply px-4;
 
     margin: 0 !important;
-    max-width: calc(100% - 100px);
-
-    &.full-width{
-      @apply pl-0;
-      max-width: 100%;
-    }
-
-    @media screen and (max-width: 600px) {
-      max-width: calc(100% - 60px);
-    }
 
     &> p {
       @apply mb-4;
     }
   }
-}
-
-header {
-  @apply flex;
-  @apply flex-col;
-  @apply text-left;
-  @apply items-start;
-  @apply justify-center;
-}
-
-.title, .author, .last-updated { margin: 0; }
-
-.last-updated, .author {
-  @apply text-xs;
-  color: var(--theme-text-lighter);
-
-  font-weight: 400;
-}
-
-.title { font-weight: 700; margin-bottom: -12px; }
-
-.post-preview > main { @apply mb-4; @apply text-sm; }
-
-header > a::before {
-  display: inline-block;
-  margin-bottom: -12px;
-  /* border-bottom: #cc8800 solid 8px !important; */
-}
-
-header > a {
-  margin-bottom: 18px;
-}
-
-a.read-more {
-  @apply text-xs;
-  @apply px-2;
-  @apply py-1;
 }
 </style>
