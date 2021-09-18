@@ -23,12 +23,18 @@ export async function getStaticPaths ({ paginate, rss }) {
     title: 'Eas',
     description: 'Full stack developer. Mentor. Loves tinkering all things tech.',
     customData: '<language>en-us</language>',
-    items: posts.map(post => ({
-      title: post.title,
-      decription: post.summary,
-      link: `/blog/post/${post.title}`,
-      pubDate: post.created,
-    }))
+    items: posts.map(post => {
+      return {
+        title: post.title,
+        decription: post.summary,
+        link: `/blog/post/${post.title}`,
+        pubDate: post.created,
+        customData: {
+          summary: post.summary,
+          tags: post.tags
+        }
+      }
+    })
   })
 
   return paginate(posts, { pageSize: 10 })
