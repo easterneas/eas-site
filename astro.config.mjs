@@ -10,7 +10,7 @@ export default {
     sitemap: true, // Generate sitemap (set to "false" to disable)
   },
   devOptions: {
-    port: 3000,         // The port to run the dev server on.
+    port: 8000,         // The port to run the dev server on.
     hostname: '0.0.0.0',
     tailwindConfig: './tailwind.config.js', // Path to tailwind.config.js if used, e.g. './tailwind.config.js'
   },
