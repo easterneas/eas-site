@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": [],
+      "label": "npm: start",
+      "detail": "clear; astro dev",
+      "promptOnClose": true,
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false,
+        "close": true
+      },
+      "runOptions": {
+        "runOn": "folderOpen",
+        "instanceLimit": 1
+      }
+    }
+  ]
+}
