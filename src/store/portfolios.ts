@@ -1,0 +1,36 @@
+import { portfolioService } from "@/services/portfolioService";
+
+async function getCollection() {
+  try {
+    const collections = await portfolioService.getAll();
+    return collections;
+  } catch (e) {
+    console.trace(e);
+  }
+}
+
+export default {
+  getCollection,
+  getPortfolios: async (): Promise<{ data: Portfolio[], meta: Record<"page" | "pageSize" | "pageCount" | "total", number> | null }> => {
+    const response = await getCollection();
+    if (!response) return {data: [], meta: null};
+
+    const {
+      data: { data, meta: paginationMeta },
+    } = response;
+
+    const portfolios = data.map(
+      ({ id, attributes }) => ({ id, ...attributes } satisfies Portfolio)
+    )
+    .sort(
+      (a, b) => Date.parse(a.publishedAt) - Date.parse(b.publishedAt)
+    )
+
+    console.log(portfolios,paginationMeta,data)
+
+    return {
+      data: portfolios,
+      meta: paginationMeta,
+    };
+  },
+};
