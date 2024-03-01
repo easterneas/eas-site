@@ -1,0 +1,36 @@
+---
+import "@/global.css";
+// import "@/scss/blog.scss";
+// import "@/scss/global.scss";
+// import "@/scss/typography.scss";
+
+import Footer from "@/components/layout/Footer.astro";
+import Head from "@/components/layout/Head.astro";
+import Navigator from "@/components/layout/Navigator.astro";
+import { ViewTransitions } from "astro:transitions";
+
+type Props = BaseLayoutProps;
+
+const { meta } = Astro.props;
+---
+
+<html lang={"en"}>
+  <head>
+    <Head title={meta.title} description={meta.excerpt} permalink="" />
+    <ViewTransitions />
+  </head>
+
+  <body class="grid grid-cols-1 sm:grid-cols-[120px_1fr] h-screen w-screen bg-darkPrimary">
+    <Navigator />
+
+    <div class="order-1 sm:order-2 overflow-y-auto grid justify-center w-full">
+      <div class="p-8 w-screen sm:w-[calc(100vw_-_120px)] sm:max-w-[800px] sm:mx-auto">
+        <div class="grid gap-8">
+          <slot />
+        </div>
+
+        <Footer />
+      </div>
+    </div>
+  </body>
+</html>
