@@ -1,63 +1,68 @@
 ---
-import Link from '../Link.astro'
-import DateBlock from '../blocks/DateBlock.astro'
+import Link from "../Link.astro";
+import PostDate from "../blocks/PostDate";
 
 export interface Props {
-  post: Object;
+  post: Post;
 }
 
 const { post } = Astro.props;
-const { title, description, publishDate, tags, created, summary, lastUpdated } = post
-const url = `/blog/post/${title}`
-
+const { title, excerpt, published, slug } = post;
+const url = `/blog/post/${slug}`;
 ---
-<article class={ [ "post-preview", created === null && 'full-width' ].join(' ') }>
-  {
-    created !== null
-    ? (<DateBlock date={ created } />)
-    : ''
-  }
 
-  <main>
-    <Link text={ title } to={ url } size={ "title" } />
-    <p>{ description || summary || '(No summary provided)' }</p>
-    <Link text={ "Read more..." } type={ "button" } to={ url } />
-  </main>
-</article>
+<div
+  class="border-[1px] p-4 grid grid-cols-[60px_1fr] sm:grid-cols-[80px_1fr] items-start gap-4 relative rounded-[8px]"
+>
+  <PostDate date={published as string} />
+
+  <div>
+    <Link
+      transition:name={`title:${slug}`}
+      transition:animate="slide"
+      text={title}
+      to={url}
+      size={"title"}
+    />
+
+    <p>{excerpt || "(No summary provided)"}</p>
+  </div>
+  <!-- </article> -->
+</div>
 
 <style lang="scss">
-.content :global(main > * + *) {
-  margin-top: 1rem;
-}
-
-.post-preview {
-  margin-bottom: 2rem !important;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid;
-  @apply border-b-gray-600;
-
-  @apply grid;
-  grid-template-columns: 100px 1fr;
-
-  &.full-width {
-    grid-template-columns: 1fr;
+  .content :global(main > * + *) {
+    margin-top: 1rem;
   }
 
-  @media screen and (max-width: 600px) {
-    grid-template-columns: 60px 1fr;
+  .post-preview {
     margin-bottom: 2rem !important;
     padding-bottom: 2rem;
-  }
+    border-bottom: 1px solid;
+    @apply border-b-gray-600;
 
-  main {
-    @apply mb-4;
-    @apply px-4;
+    @apply grid;
+    grid-template-columns: 100px 1fr;
 
-    margin: 0 !important;
+    &.full-width {
+      grid-template-columns: 1fr;
+    }
 
-    &> p {
+    @media screen and (max-width: 640px) {
+      grid-template-columns: 60px 1fr;
+      margin-bottom: 2rem !important;
+      padding-bottom: 2rem;
+    }
+
+    main {
       @apply mb-4;
+      @apply px-4;
+
+      margin: 0 !important;
+
+      & > p {
+        @apply mb-4;
+      }
     }
   }
-}
 </style>

@@ -1,0 +1,158 @@
+---
+type Pagination = {
+  start: number;
+  end: number;
+  total: number;
+  currentPage: number;
+  size: number;
+  lastPage: number;
+  url: {
+    current: string;
+    prev: string | undefined;
+    next: string | undefined;
+  };
+};
+
+type Props = {
+  paginate: Pagination;
+};
+
+const { paginate } = Astro.props;
+
+const paginator = {
+  showPrev: paginate.currentPage !== 1,
+  showNext: paginate.currentPage !== paginate.lastPage,
+  pagesBeforeCurrent:
+    paginate.currentPage - 1 > 2 ? 2 : paginate.currentPage - 1,
+  pagesAfterCurrent:
+    paginate.lastPage - paginate.currentPage > 2
+      ? 2
+      : paginate.lastPage - paginate.currentPage,
+};
+---
+
+<div id="pagination">
+  {
+    paginate.currentPage !== 1 ? (
+      <button
+        id="pagination__prev"
+        onclick={"window.location.href = '" + paginate.url.prev + "'"}
+      >
+        Newer
+      </button>
+    ) : (
+      <span />
+    )
+  }
+  <div id="pagination__pages" class="flex justify-center">
+    {
+      new Array(1 + paginator.pagesAfterCurrent + paginator.pagesBeforeCurrent)
+        .fill("")
+        .map((_, i) => paginate.currentPage - paginator.pagesBeforeCurrent + i)
+        .map((page) =>
+          page === paginate.currentPage ? (
+            <div class="active">
+              <span class="pagination__page">{page}</span>
+            </div>
+          ) : (
+            <button
+              onclick={
+                "window.location.href = `/" +
+                paginate.url.current.split("/")[1] +
+                "/" +
+                page +
+                "`"
+              }
+            >
+              <span class="pagination__page">{page}</span>
+            </button>
+          ),
+        )
+    }
+  </div>
+  {
+    paginate.currentPage !== paginate.lastPage && paginate.url.next ? (
+      <button
+        id="pagination__next"
+        onclick={"window.location.href = '" + paginate.url.next + "'"}
+      >
+        Older
+      </button>
+    ) : (
+      <span />
+    )
+  }
+</div>
+
+<style lang="scss">
+  #pagination {
+    @apply grid;
+    grid-template-columns: minmax(90px, 120px) 1fr minmax(90px, 120px);
+
+    &__pages {
+      @apply flex;
+      @apply justify-center;
+      @apply gap-[8px];
+      @apply items-stretch;
+
+      button,
+      div {
+        @apply flex;
+        @apply py-2;
+        @apply px-2;
+        @apply min-w-[50px] min-h-[50px];
+        @apply items-center justify-center;
+        @apply rounded;
+        @apply text-[18px] font-[400];
+
+        &:hover span {
+          @apply text-black;
+        }
+
+        span {
+          @apply text-[#fc0];
+        }
+
+        &.active {
+          @apply bg-[#fc0];
+
+          span {
+            @apply text-black;
+          }
+        }
+      }
+    }
+
+    &__prev,
+    &__next {
+      @apply border-0 border-b-[2px];
+      @apply rounded-none;
+      @apply text-white;
+
+      &:hover {
+        @apply text-black;
+      }
+    }
+    &__next {
+      @apply text-right;
+    }
+    &__prev {
+      @apply text-left;
+    }
+  }
+
+  // .pagination__page {
+  //   @apply px-2;
+  //   @apply py-1;
+  //   position: relative;
+  //   text-decoration: none;
+  //   color: white;
+  //   transition: color 120ms cubic-bezier(0.23, 1, 0.32, 1);
+  //   z-index: 0;
+  //   display: block;
+  // }
+
+  // span.pagination__page {
+  //   color: #000000;
+  // }
+</style>

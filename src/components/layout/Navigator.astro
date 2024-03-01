@@ -1,0 +1,47 @@
+---
+import Logo from "../Logo.astro";
+
+const menu = [
+  { name: "Home", link: "/", type: "logo" },
+  { name: "About", link: "/about" },
+  { name: "Portfolio", link: "/portfolios" },
+  { name: "Blog", link: "/blog" },
+  { name: "Contact", link: "/contact" },
+];
+
+const currentURL = new URL(Astro.request.url).href;
+---
+
+<div class="sm:order-1 order-2 bg-darkSecondary border-r-[1px] border-r-[#fc0]">
+  <ul class="nav__menu">
+    {
+      menu.map((item, i) => {
+        if (item.type === "logo")
+          return (
+            <li class="nav__menu-item w-auto sm:w-[120px] logo" style={`order: ${i}`}>
+              <a class="logo-desktop" href={item.link}>
+                <Logo size={90} />
+              </a>
+              <a class="logo-mobile" href={item.link}>
+                <Logo size={32} />
+              </a>
+            </li>
+          );
+
+        return (
+          <li
+            class={[
+              "nav__menu-item",
+              currentURL.split("/").includes(item.link.split("/")[1])
+                ? "active"
+                : "",
+            ].join(" ")}
+            style={`order: ${i}`}
+          >
+            <a href={item.link}>{item.name}</a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</div>

@@ -1,0 +1,19 @@
+---
+import Icon from '@/components/Icon'
+import Link from '../Link.astro'
+---
+
+<footer class="py-16 flex gap-1 items-center">
+  Made with <Icon name="Heart" size={16} /> using <Link to="//astro.build" text="Astro" />.
+</footer>
+
+<style>
+footer {
+  @apply pt-16;
+  @apply pb-8;
+  @apply text-xs;
+
+  margin: 0 auto;
+  width: 100%;
+}
+</style>

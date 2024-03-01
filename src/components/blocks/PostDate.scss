@@ -1,0 +1,70 @@
+
+
+.intro__date {
+  @apply grid;
+  @apply grid-flow-col;
+
+  margin: 0 !important;
+  width: 80px !important;
+
+  @media screen and (max-width: 640px) {
+    width: 60px !important;
+    grid-template-rows: 60px 1fr;
+  }
+
+  div {
+    margin-top: 0;
+  }
+
+  div {
+    @apply flex;
+    @apply justify-center;
+    /* @apply mt-2; */
+
+    span {
+      margin: 0 !important;
+      padding: 0 !important;
+      @apply block;
+
+      &.date__month {
+        @apply uppercase;
+
+        @media screen and (max-width: 640px) {
+          @apply text-xs;
+        }
+      }
+
+      &.date__day {
+        @apply text-4xl;
+
+        @media screen and (max-width: 640px) {
+          @apply text-2xl;
+        }
+      }
+
+      &.date__year {
+        @apply uppercase;
+
+        @media screen and (max-width: 640px) {
+          @apply text-xs;
+        }
+      }
+    }
+  }
+
+  .date__block {
+    height: 100px;
+    margin: 0 !important;
+
+    @apply bg-white;
+    @apply text-gray-900;
+    @apply flex;
+    @apply justify-center;
+    @apply items-center;
+    @apply flex-col;
+
+    @media screen and (max-width: 640px) {
+      height: 60px;
+    }
+  }
+}
