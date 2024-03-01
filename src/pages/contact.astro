@@ -1,17 +1,46 @@
 ---
-import Main from '../layouts/Main.astro'
-import Link from '../components/Link.astro'
+import Icon from "@/components/Icon";
+import PageHeader from "@/components/blocks/PageHeader";
+import MarkdownContent from "@/components/blocks/post-content/MarkdownContent";
+import ContactCard from "@/components/cards/ContactCard";
+import Base from "../layouts/Base.astro";
+import store from "../store";
+
+const { contacts: contactCollection } = store;
+
+const contacts = await contactCollection.getContacts();
+
+console.log(contacts?.data);
 
 const meta = {
-  title: `Contact Me`,
-  description: "Full stack developer. Mentor. Loves tinkering all things tech.",
-  permalink: "https://example.com"
-}
+  title: "Contact Me",
+  excerpt: "Full stack developer. Mentor. Loves tinkering all things tech.",
+};
+
+const mdString = `
+Let's connect!
+
+Whether asking about everything tech, requesting some help, or just doing chats, I'm available in the following social media:
+`;
 ---
 
-<Main meta={meta}>
-  <section>
-    <h1>Coming soon!</h1>
-    <Link text="Go Back" to="/" />
-  </section>
-</Main>
+<Base meta={meta}>
+  <PageHeader>
+    <!-- ? this... -->
+    <Icon name="Contact" size={24} slot="Icon" />
+    <!-- ? ...works like Icon={<PencilLineIcon />} prop in [p]react -->
+
+    <!-- * this is the actual "child" -->
+     Contact Me
+  </PageHeader>
+
+  <MarkdownContent md={mdString} client:load />
+
+  <div class="grid grid-cols-3 gap-4">
+    {
+      (contacts?.data ?? []).map((contact) => (
+        <ContactCard contact={contact} client:visible />
+      ))
+    }
+  </div>
+</Base>

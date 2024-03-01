@@ -1,57 +1,77 @@
 ---
-import Md from '../components/typography/Markdown.astro'
+import Icon from "@/components/Icon";
+import PageHeader from "@/components/blocks/PageHeader";
+import MarkdownContent from "@/components/blocks/post-content/MarkdownContent";
 
-import Main from '../layouts/Main.astro'
-import Link from '../components/Link.astro'
+import Base from "@/layouts/Base.astro";
 
 const pageMeta = {
-  title: 'About Me',
-  description: "Full stack developer. Mentor. Loves tinkering all things tech.",
-}
+  title: "About Me",
+  excerpt: "Full stack developer. Mentor. Loves tinkering all things tech.",
+};
 
-const markdownContent = `
-# About Me
-
+const mdPreface = `
 Hi, it's me, Andreas... or just call me Eas.
 
 I love coding, tinkering, and solving each problems I found.
+`;
 
-It started when I was 4, and at that time, I made my parent's computer unusable.
-Since then, I wanted to learn more about computers, and I started to love it.
+const markdownContent = `
+My passion for computers began when I was just four years old, and it started... in a weird way.
+Back then, I like to tinker what's inside Windows folder (back then it was Windows 95/98 -- how nostalgic!).
+I started running some weird apps, and before I knew it, I accidentally made my parents' computer unusable.
 
-When I was 14, a family relative of mine lent me
-[this book](https://www.goodreads.com/book/show/3402859-joomla-website-magic)
-of how to manage CMS sites using Joomla! CMS. With that book,
-I started to learn how websites work.
+Since then, I wanted to learn more about computers, and I started to love it!
+
+When I turned 14, a relative introduced me to the world of
+[managing websites using Joomla CMS through a book](https://www.goodreads.com/book/show/3402859-joomla-website-magic)
+they lent me. From there, I started to learn how websites work, and in the end,
+I ended up trying to make a blog using WordPress, which was more suited for blogging than Joomla!.
 
 But it was so hard due to the Internet connection was so expensive and scarce
 at that time. So I decided to borrow his computer, and try some plugins
-mentioned on the book... in exchange of doing his favor: packing soy milk
+mentioned on the book -- in exchange of doing his favor: packing soy milk
 (it was delicious, by the way).
 
-Years later, I started to learn PHP as my first programming language to learn
-more about how websites (and later, web apps) work. Now, I'm starting to create
-solutions for real-life problems by developing sites, apps, and platforms,
-starting with the small ones. You can find all of these within
-[my portfolios page](/portfolios).
+My first website was made using \`.co.cc\` domain back then (it's not around anymore since I checked in the recent years).
+I learned how to host a website, register said domain, hook it into my hosting provider (a free PHP 5.3 hosting provider),
+and encountered a hacked blog, too. I guess I was lucky back then!
 
-I also currently work as a full-time teacher at [Hacktiv8](https://hacktiv8.com),
-sharing all of what I've learned so far about JavaScript. But if there's something
-that I found outside of my teaching job, I'll share it here -- I'll try to be
-as concise as possible.
+Ahem, back to topic.
 
-If you want to reach out to me, [feel free to contact me](/contact). I'll be
-happy to reply you back!
+So, years later (yes, that was a time skip), I started to learn PHP as my first programming language (and MySQL as the RDBMS) to learn
+more about how websites -- and later, web apps -- work. It was another experience: I learned how to make a prepared statement, about procedural-style programming,
+and later on, object-oriented programming while learning Laravel.
+
+Whew... that was an experience.
+
+And here I am, the present me, starting to create fun things while also learning something new!
+You can find all of these within [my portfolios page](/portfolios).
+`;
+
+const mdWorkExperience = ``
+
+const mdSkils = ``
+
+const mdEndText = `
+  If you want to say hi, [feel free to contact me](/contact). I'll be happy to reply you back!
 `
-
 ---
 
-<Main meta={ pageMeta }>
-  <article>
-    <Link text="Go Back" to="/" size="" type="" />
+<Base meta={pageMeta}>
+  <PageHeader>
+    <!-- this works like Icon={<PencilLineIcon />} in [p]react -->
+    <Icon name="UserRound" size={24} slot="Icon" />
 
-    <div class="section__content">
-      <Md content={ markdownContent } />
-    </div>
+    <!-- this is the actual "child" -->
+     About Me
+  </PageHeader>
+
+  <article class="grid gap-4 leading-[24pt]">
+    <MarkdownContent md={mdPreface} client:load />
+    <MarkdownContent md={markdownContent} client:load />
+    <MarkdownContent md={mdWorkExperience} client:load />
+    <MarkdownContent md={mdSkils} client:load />
+    <MarkdownContent md={mdEndText} client:load />
   </article>
-</Main>
+</Base>

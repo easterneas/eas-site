@@ -1,0 +1,52 @@
+---
+import Icon from "@/components/Icon";
+import PageHeader from "@/components/blocks/PageHeader";
+import PostPreview from "@/components/blog/PostPreview.astro";
+import Paginator from "@/components/partials/Paginator.astro";
+import Base from "@/layouts/Base.astro";
+
+import store from "@/store";
+
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const { posts: postCollection } = store;
+  const response = await postCollection.getPosts();
+
+  if (!response) return paginate([]);
+
+  const { data } = response;
+
+  return paginate(data, { pageSize: 5 });
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const {
+  page: { data, ...paginator },
+} = Astro.props as Props;
+
+const mdString = "I occassionally post here, with different kinds of topics that I usually encounter.";
+
+const pageMeta = {
+  title: `Blog by tag: ${"[UPDATE-TAG]"}`,
+  excerpt: mdString
+};
+---
+
+<Base meta={pageMeta}>
+  <div class="grid gap-8">
+    <PageHeader>
+      <!-- this works like Icon={<PencilLineIcon />} in [p]react -->
+      <Icon slot="Icon" name="Tag" />
+      <!-- this is the actual "child" -->
+      Tag: [UPDATE-TAG]
+    </PageHeader>
+
+    <div class="mx-auto md:max-w-[800px]">
+      {data.map((p) => <PostPreview post={p} />)}
+    </div>
+
+    <Paginator paginate={paginator} />
+  </div>
+</Base>

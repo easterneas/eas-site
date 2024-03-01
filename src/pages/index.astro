@@ -1,48 +1,86 @@
 ---
 // Component Imports
-import Main from '../layouts/Main.astro'
-import PostPreview from '../components/blog/PostPreview.astro'
-import Link from '../components/Link.astro'
+import Link from "../components/Link.astro";
+import PostPreview from "../components/blog/PostPreview.astro";
+import Base from "../layouts/Base.astro";
 
-import store from '../store'
+import Icon from "@/components/Icon";
+import PageHeader from "@/components/blocks/PageHeader";
+import PortfolioSection from "@/components/sections/PortfolioSection";
+import store from "../store";
+
+const { portfolios: portfolioCollection } = store;
+
+const { data: portfolios } = await portfolioCollection.getPortfolios();
 
 const pageMeta = {
-  description: "Full stack developer. Mentor. Loves tinkering all things tech.",
-  permalink: "https://example.com"
+  excerpt: "Full stack developer. Mentor. Loves tinkering all things tech.",
+  permalink: "https://example.com",
+};
+
+let posts: Post[] = [];
+
+try {
+  const response = await store.posts.getLatestPosts();
+
+  if (response) {
+    posts = response.data;
+  }
+} catch (e) {
+  console.trace(e);
 }
-
-let posts = await store.posts.getPosts()
-
-posts = posts.slice(0, 3)
-
 ---
 
-<Main meta={ pageMeta }>
-  <section>
-    <h1>Oh, hi there! <code>Eas</code> here.</h1>
+<Base meta={pageMeta}>
+  <div class="flex gap-4 font-title">
+    <div
+      class="bg-[#fc0] rounded-full p-3 rotate-[-20deg] text-black animate-wiggle"
+    >
+      <Icon name="Hand" size={36} />
+    </div>
+
+    <h1 class="text-[4rem]">
+      Hi! I'm <span class="text-white">Eas</span>.
+    </h1>
+  </div>
+
+  <section class="grid gap-[12px]">
+    <p>I'm an full-stack developer, who loves experimenting something new.</p>
     <p>
-      I'm Andreas, but you can just call me Eas.
-    </p>
-    <p>
-      I'm a full-stack developer, heavily towards backend development. I love experimenting all things tech, and trying something new to solve problems.
-    </p>
-    <p>
-      You can <Link text="learn more about me here" to="/about" />, in which I'll tell you more about me.
+      I also love some tinkering some IT stuffs. Homelabbing is one fun thing to
+      do!
     </p>
   </section>
-  <!-- <section>
-    <h2>Portfolios</h2>
-    <p>I love making apps, and here's the latest 3 projects:</p>
-    <p>[==LATEST 3 PROJECTS==]</p>
-    <p><Link text="My complete list of portfolios" type="button" to="/portfolios" /></p>
-  </section> -->
-  <section>
-    <h2>Blog</h2>
-    {
-      posts.map(post => (
-        <PostPreview post={post} />
-      ))
-    }
-    <Link to="/blog" text="My other posts" type="button" size="large" />
-  </section>
-</Main>
+
+  <PageHeader className="text-4xl border-none relative left-[-16px]">
+    Latest Portfolios
+  </PageHeader>
+
+  <div class="grid gap-4 grid-cols-3">
+    <PortfolioSection portfolios={portfolios} limit={3} client:load />
+  </div>
+
+  <div class="flex">
+    <Link
+      to="/portfolios"
+      text="Check out my other projects!"
+      type="button"
+      size="large"
+    />
+  </div>
+
+  <PageHeader className="text-4xl border-none relative left-[-16px]">
+    I also write things!
+  </PageHeader>
+
+  {posts.map((post) => <PostPreview post={post} />)}
+
+  <div class="flex">
+    <Link
+      to="/blog"
+      text="See my other posts here."
+      type="button"
+      size="large"
+    />
+  </div>
+</Base>

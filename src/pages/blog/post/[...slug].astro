@@ -1,0 +1,60 @@
+---
+import store from "../../../store";
+
+import Base from "@/layouts/Base.astro";
+import type {
+GetStaticPaths,
+InferGetStaticParamsType,
+InferGetStaticPropsType,
+} from "astro";
+import BlogPost from "../../../components/blog/BlogPost.astro";
+
+export const getStaticPaths = (async () => {
+  const response = await store.posts.getPosts();
+
+  if (!response) return [];
+
+  const { data } = response;
+
+  // rss({
+  //   title: 'Eas',
+  //   description: 'Full stack developer. Mentor. Loves tinkering all things tech.',
+  //   customData: '<language>en-us</language>',
+  //   items: data.map(post => {
+  //     return {
+  //       title: post.title,
+  //       decription: post.excerpt,
+  //       link: `/blog/post/${post.slug}`,
+  //       pubDate: post.created,
+  //       customData: {
+  //         summary: post.excerpt,
+  //         // tags: post.tags
+  //       }
+  //     }
+  //   })
+  // })
+
+  return data.map(({ slug, ...post }) => ({
+    params: { slug },
+    props: post,
+  }));
+}) satisfies GetStaticPaths;
+
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { slug } = Astro.params as Params;
+const post = Astro.props as Props;
+// const { data: posts, ...pagination } = page
+
+const postMeta = {
+  slug,
+  title: post.title,
+  excerpt: post.excerpt,
+  publishDate: post.published || post.publishedAt,
+};
+---
+
+<Base meta={postMeta}>
+  <BlogPost post={{ ...post, slug }} />
+</Base>
