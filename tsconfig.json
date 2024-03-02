@@ -1,11 +1,11 @@
 {
   // "extends": "astro/tsconfigs/base",
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "types": ["astro/client"],
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
 
