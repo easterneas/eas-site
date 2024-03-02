@@ -1,8 +1,8 @@
 ---
-import Icon from "@/components/Icon";
 import PageHeader from "@/components/blocks/PageHeader";
 import MarkdownContent from "@/components/blocks/post-content/MarkdownContent";
 import ContactCard from "@/components/cards/ContactCard";
+import { ContactIcon } from "lucide-react";
 import Base from "../layouts/Base.astro";
 import store from "../store";
 
@@ -25,12 +25,7 @@ Whether asking about everything tech, requesting some help, or just doing chats,
 ---
 
 <Base meta={meta}>
-  <PageHeader>
-    <!-- ? this... -->
-    <Icon name="Contact" size={24} slot="Icon" />
-    <!-- ? ...works like Icon={<PencilLineIcon />} prop in [p]react -->
-
-    <!-- * this is the actual "child" -->
+  <PageHeader Icon={ContactIcon}>
      Contact Me
   </PageHeader>
 

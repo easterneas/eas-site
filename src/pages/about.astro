@@ -1,9 +1,9 @@
 ---
-import Icon from "@/components/Icon";
 import PageHeader from "@/components/blocks/PageHeader";
 import MarkdownContent from "@/components/blocks/post-content/MarkdownContent";
 
 import Base from "@/layouts/Base.astro";
+import { UserRound } from "lucide-react";
 
 const pageMeta = {
   title: "About Me",
@@ -59,11 +59,7 @@ const mdEndText = `
 ---
 
 <Base meta={pageMeta}>
-  <PageHeader>
-    <!-- this works like Icon={<PencilLineIcon />} in [p]react -->
-    <Icon name="UserRound" size={24} slot="Icon" />
-
-    <!-- this is the actual "child" -->
+  <PageHeader Icon={UserRound}>
      About Me
   </PageHeader>
 
