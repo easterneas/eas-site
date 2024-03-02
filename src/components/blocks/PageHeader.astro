@@ -1,0 +1,27 @@
+---
+import type { FunctionComponent } from "preact";
+import { twMerge } from "tailwind-merge";
+
+type Props = {
+  className?: string
+  Icon?: FunctionComponent
+}
+
+const { Icon, className } = Astro.props
+---
+
+<div class={twMerge("text-5xl flex")}>
+  <div
+    class={twMerge(
+      "flex border-[2px] border-white rounded-[8px] h-full overflow-hidden",
+      "text-[#fc0]", className
+    )}
+  >
+    {Icon && <div class={"h-full px-[20px] flex text-black bg-white"}><Icon /></div>}
+    <div class={"flex gap-4 font-title select-none font-[400] p-2 px-4 "}>
+      <span>
+        <slot />
+      </span>
+    </div>
+  </div>
+</div>
