@@ -11,7 +11,7 @@ async function getCollection() {
 
 export default {
   getCollection,
-  getPortfolios: async (): Promise<{ data: Portfolio[], meta: Record<"page" | "pageSize" | "pageCount" | "total", number> | null }> => {
+  getPortfolios: async (): Promise<{ data: Portfolio[], meta: {pagination: Record<"page" | "pageSize" | "pageCount" | "total", number>} | null }> => {
     const response = await getCollection();
     if (!response) return {data: [], meta: null};
 
