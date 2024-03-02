@@ -1,0 +1,1 @@
+type PortfolioStatusEnum = 'running' | 'archived' | 'in-progress' | 'canceled'

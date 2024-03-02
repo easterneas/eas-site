@@ -1,0 +1,55 @@
+---
+import MarkdownContent from "@/components/blocks/post-content/MarkdownContent";
+import PostDate from "../blocks/PostDate";
+import Tag from "./partials/Tag.astro";
+import Title from "./partials/Title.astro";
+
+export interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title: postTitle, published, postContent } = post;
+const tags: string[] = [];
+---
+
+<div class="grid gap-8 relative">
+  <div class="relative flex sm:block items-start justify-start">
+    <div
+      class="sm:absolute grid gap-4 items-end justify-end left-[-116px] w-[116px] pr-[16px]"
+    >
+      <button
+        class="hidden sm:[display:_unset]"
+        onclick="window.location.href = '..'"
+      >
+        Go back
+      </button>
+
+      <PostDate date={published as string} />
+    </div>
+
+  <Title
+      transition:name={`title:${post.slug}`}
+      transition:animate="slide"
+      text={postTitle}
+    />
+  </div>
+
+  <div class="order-3 grid gap-8">
+    {postContent && <MarkdownContent md={postContent} client:load />}
+
+    <article class="section__content">
+      <slot />
+      {tags?.length > 0 && <h5 class="tags">Listed under</h5>}
+      {
+        tags.length > 0 && (
+          <div>
+            {tags?.map((tag: string) => (
+              <Tag name={tag} />
+            ))}
+          </div>
+        )
+      }
+    </article>
+  </div>
+</div>

@@ -1,16 +1,52 @@
 {
   "name": "@eas/blog",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "astro dev --verbose",
+    "astro": "astro",
     "start": "clear; astro dev",
-    "build": "astro build"
+    "preview": "astro build && wrangler pages dev ./dist",
+    "deploy": "astro build && wrangler pages deploy ./dist",
+    "build": "astro check && astro build",
+    "build-cf-types": "wrangler types"
   },
   "devDependencies": {
-    "@astrojs/renderer-preact": "^0.2.1",
+    "@biomejs/biome": "^1.3.3",
     "@snowpack/plugin-dotenv": "^2.2.0",
-    "astro": "^0.20.5",
-    "tailwindcss": "^2.2.8"
+    "@types/node": "^20.10.0",
+    "astro": "4.4.0",
+    "prettier": "^3.1.0",
+    "prettier-plugin-astro": "^0.12.2",
+    "sass": "^1.69.5",
+    "tailwindcss": "^3.0.24",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "@astrojs/check": "0.5.4",
+    "@astrojs/cloudflare": "^9.0.2",
+    "@astrojs/mdx": "2.1.1",
+    "@astrojs/preact": "3.1.0",
+    "@astrojs/rss": "4.0.5",
+    "@astrojs/tailwind": "5.1.0",
+    "@headlessui/react": "^1.7.18",
+    "@preact/compat": "^17.1.2",
+    "@preact/preset-vite": "^2.7.0",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "astro-remote": "^0.2.4",
+    "axios": "^1.6.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "dayjs": "^1.11.10",
+    "dotenv": "^16.3.1",
+    "highlight.js": "^11.9.0",
+    "lucide-react": "^0.331.0",
+    "markdown-to-jsx": "^7.4.1",
+    "preact": "^10.6.5",
+    "react": "npm:@preact/compat@latest",
+    "react-dom": "npm:@preact/compat@latest",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss-animate": "^1.0.7"
   }
 }

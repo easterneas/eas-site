@@ -1,55 +1,54 @@
 ---
-// Component Imports
-import Main from '../../layouts/Main.astro';
+import PageHeader from "@/components/blocks/PageHeader.astro";
+import MarkdownContent from "@/components/blocks/post-content/MarkdownContent";
+import PostPreview from "@/components/blog/PostPreview.astro";
+import Paginator from "@/components/partials/Paginator.astro";
+import Base from "@/layouts/Base.astro";
 
-import Pagination from '../../components/partials/Pagination.astro';
-import PostPreview from '../../components/blog/PostPreview.astro';
+import store from "@/store";
 
-import store from '../../store';
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import { PencilLineIcon } from "lucide-react";
 
-const { page } = Astro.props
-const { data: allPosts, ...pagination } = page
+export const getStaticPaths = (async ({ paginate }) => {
+  const { posts: postCollection } = store;
+  const response = await postCollection.getPosts();
+
+  if (!response) return paginate([]);
+
+  const { data } = response;
+
+  return paginate(data, { pageSize: 5 });
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const {
+  page: { data, ...paginator },
+} = Astro.props as Props;
+
+const mdString = "I occassionally post here, with different kinds of topics that I usually encounter.";
 
 const pageMeta = {
-  title: `Blog`,
-  description: `You're reading my <s>diary</s> digital, living journal of all things tech and programming.`,
-}
-
-export async function getStaticPaths ({ paginate, rss }) {
-  const { posts: postCollection } = store
-  const posts = await postCollection.getPosts()
-
-  rss({
-    title: 'Eas',
-    description: 'Full stack developer. Mentor. Loves tinkering all things tech.',
-    customData: '<language>en-us</language>',
-    items: posts.map(post => {
-      return {
-        title: post.title,
-        decription: post.summary,
-        link: `/blog/post/${post.title}`,
-        pubDate: post.created,
-        customData: {
-          summary: post.summary,
-          tags: post.tags
-        }
-      }
-    })
-  })
-
-  return paginate(posts, { pageSize: 10 })
-}
+  title: "Blog",
+  excerpt: mdString
+};
 ---
 
-<Main meta={ pageMeta }>
-  <section>
-    <h1 class="latest">{ pageMeta.title }</h1>
-    <p>{ pageMeta.description }</p>
-  </section>
+<Base meta={pageMeta}>
+  <div class="grid gap-8">
+    <PageHeader Icon={PencilLineIcon}>
+       Blog
+    </PageHeader>
 
-  <section>
-    { allPosts.map(p => <PostPreview post={ p } />) }
+    <article>
+      <MarkdownContent md={mdString} client:load />
+    </article>
 
-    <Pagination paginate={ pagination } />
-  </section>
-</Main>
+    <div class="mx-auto md:max-w-[800px] grid gap-8">
+      {data.map((p) => <PostPreview post={p} />)}
+    </div>
+
+    <Paginator paginate={paginator} />
+  </div>
+</Base>

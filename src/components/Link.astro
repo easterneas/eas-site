@@ -1,138 +1,132 @@
 ---
-// 
-const { to, text, size, type } = Astro.props
+import { twMerge } from "tailwind-merge";
 
-export default interface Props {
-  to: string,
-  type: string,
-  text: string,
-  size: string
+const { to, text, size, type } = Astro.props;
+
+interface Props {
+  to: string;
+  type?: "button" | "link";
+  text: string;
+  size?: "" | "title" | "large" | "small";
 }
 
-function parseClass (options = { size, type }) {
-  const { size, type } = options
-  const res = []
+function parseClass(options = { size, type }) {
+  const { size, type } = options;
+  const res = [];
 
-  res.push(setSize(size))
-  res.push(setType(type))
+  res.push(sanitizeSize(size));
+  res.push(setType(type));
 
-  return res.join(' ')
+  return res.join(" ");
 }
 
-function setType (type) {
-  type = type || ''
+function setType(type: Props["type"]) {
+  return type || "button";
+}
 
-  switch (type) {
-    case 'button':
-      return 'button'
-    default:
-      return 'link'
+function sanitizeSize(size: Props["size"] = "") {
+  if (!["title", "large", "small", ""].includes(size)) {
+    size = "";
   }
-}
 
-function setSize (size) {
-  size = size || ''
-
-  switch (size) {
-    case 'title':
-      return 'title'
-    case 'large':
-      return 'large'
-    case 'small':
-      return 'small'
-    case '':
-      return ''
-    default:
-      throw new Error(JSON.stringify({ msg: 'Invalid size', to, text, size }))
-  }
+  return size;
 }
 ---
 
-<a href={ to } class={ parseClass() }>
-  { size === 'title' ? (<h4>{ text }</h4>) : text }
+<a href={to} class={twMerge(parseClass(), "rounded-[4px] overflow-hidden")}>
+  {text}
 </a>
 
 <style lang="scss">
+  a {
+    background-image: linear-gradient(to right, #fc0 50%, transparent 50%);
+    background-size: 200% 100%;
+    background-position: 100%;
 
-a {
-  background-image: linear-gradient(to right, #fc0 48%, transparent 48%);
-  background-size: 200% 100%;
-  background-position: 100%;
-
-  transition:
-    background-position 250ms cubic-bezier(0.23, 1, 0.32, 1),
-    color 250ms cubic-bezier(0.23, 1, 0.32, 1),
-    padding 250ms cubic-bezier(0.23, 1, 0.32, 1);
-
-  color: #fc0;
-  text-decoration: none;
-
-  &.link, &.button {
-    position: relative;
-    z-index: 0;
-  }
-
-  &.link {
-    display: inline-block;
+    transition:
+      background-position 250ms cubic-bezier(0.23, 1, 0.32, 1),
+      color 250ms cubic-bezier(0.23, 1, 0.32, 1),
+      padding 250ms cubic-bezier(0.23, 1, 0.32, 1);
 
     color: #fc0;
-    background-image: transparent;
     text-decoration: none;
-    
-    &:hover {
-      color: #fff;
-    }
-  }
 
-  &.button {
-    color: #fc0;
-    display: inline-block;
-
-    @apply py-1;
-    @apply text-sm;
-
-    &:hover,
-    &:focus {
-      @apply text-gray-900;
-      background-position: 0%;
-
-      @apply px-2;
+    &.link,
+    &.button {
+      position: relative;
+      z-index: 0;
     }
 
-    &.large {
-      @apply px-4;
-      @apply py-2;
+    &.link {
+      display: inline-block;
+
+      color: #fc0;
+      background-image: transparent;
+      text-decoration: none;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+
+    &.button {
+      color: #fc0;
+      display: inline-block;
+
+      @apply p-1;
+      @apply text-sm;
 
       &:hover,
       &:focus {
         @apply text-gray-900;
         background-position: 0%;
 
-        @apply px-6;
+        // @apply px-2;
+      }
+
+      &.large {
+        @apply border-[1px] border-[#fc0];
+        @apply px-4;
+        @apply py-2;
+
+        &:hover,
+        &:focus {
+          @apply text-gray-900;
+          background-position: 0%;
+
+          // @apply px-6;
+        }
+      }
+
+      &.small {
+        @apply px-1;
+        @apply py-0.5;
+
+        &:hover,
+        &:focus {
+          @apply text-gray-900;
+          background-position: 0%;
+
+          @apply px-6;
+        }
       }
     }
 
-    &.small {
-      @apply px-1;
-      @apply py-0.5;
+    &.title {
+      @apply font-title;
+      @apply pr-2;
+      @apply text-[24pt];
+      @apply leading-[20pt];
+      display: block;
+      background-image: linear-gradient(to right, #fc0 50%, transparent 50%);
 
-      @apply text-xs;
+      &:hover,
+        &:focus {
+          @apply text-gray-900;
+          background-position: 0%;
+
+          @apply pl-2;
+        }
     }
   }
-
-  &.title {
-    display: block;
-    background-image: linear-gradient(to right, #fc0 50%, transparent 50%);
-
-    h4 { margin: 0 !important; }
-
-    &:hover,
-    &:focus {
-      @apply text-gray-900;
-      background-position: 0%;
-
-      @apply pl-2;
-    }
-  }
-}
 </style>

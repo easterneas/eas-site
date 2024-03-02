@@ -1,0 +1,70 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { twMerge } from "tailwind-merge";
+
+interface Props {
+  variant: "hero" | "h1" | "h2" | "h3" | "h4" | "h5";
+  description?: string;
+  className?: HTMLAttributes<"h1" | "h2" | "h3" | "h4" | "h5">["class"];
+}
+
+const { variant, className } = Astro.props;
+
+if (!variant)
+  throw new Error(
+    "Invalid title variant. Make sure that the variant is filled, and it's in a valid format: h1 through h6 are acceptable.",
+  );
+---
+
+{
+  variant === "hero" && (
+    <div class="relative">
+      <h1 class={twMerge("text-[36px] md:text-[72px] opacity-20", className)}>
+        <slot />
+      </h1>
+      <h1
+        class={twMerge(
+          "absolute right-0 -bottom-[56px] text-[72px] md:text-[216px] opacity-20",
+          className,
+        )}
+      >
+        <slot />
+      </h1>
+    </div>
+  )
+}
+{
+  variant === "h1" && (
+    <h1>
+      <slot />
+    </h1>
+  )
+}
+{
+  variant === "h2" && (
+    <h2>
+      <slot />
+    </h2>
+  )
+}
+{
+  variant === "h3" && (
+    <h3>
+      <slot />
+    </h3>
+  )
+}
+{
+  variant === "h4" && (
+    <h4>
+      <slot />
+    </h4>
+  )
+}
+{
+  variant === "h5" && (
+    <h5>
+      <slot />
+    </h5>
+  )
+}
