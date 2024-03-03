@@ -11,6 +11,8 @@ export interface Props {
 const { post } = Astro.props;
 const { title: postTitle, published, postContent } = post;
 const tags: string[] = [];
+
+console.log(post.content.map(({children}) => children))
 ---
 
 <div class="grid gap-8 relative">
@@ -36,6 +38,29 @@ const tags: string[] = [];
   </div>
 
   <div class="order-3 grid gap-8">
+    {
+      post.content.map(({ children, type, level }) => {
+        const textsToRender = children.map(({ code, text }) => {
+          if(code) return <code>{text}</code>
+          return <span>{text}</span>
+        })
+        switch(type) {
+          case 'heading':
+            const {text} = children[0]
+
+            switch(level){
+              case 1: return <h1>{text}</h1>;
+              case 2: return <h2>{text}</h2>;
+              case 3: return <h3>{text}</h3>;
+              case 4: return <h4>{text}</h4>;
+              case 5: return <h5>{text}</h5>;
+            }
+            return ''
+          case 'paragraph':
+            return <span style="display: inline-block;">{textsToRender}</span>
+        }
+      })
+    }
     {postContent && <MarkdownContent md={postContent} client:load />}
 
     <article class="section__content">
