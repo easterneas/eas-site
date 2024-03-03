@@ -12,7 +12,6 @@ const { post } = Astro.props;
 const { title: postTitle, published, postContent } = post;
 const tags: string[] = [];
 
-console.log(post.content.map(({children}) => children))
 ---
 
 <div class="grid gap-8 relative">
@@ -39,7 +38,7 @@ console.log(post.content.map(({children}) => children))
 
   <div class="order-3 grid gap-8">
     {
-      post.content.map(({ children, type, level }) => {
+      (post.content || []).map(({ children, type, level }) => {
         const textsToRender = children.map(({ code, text }) => {
           if(code) return <code>{text}</code>
           return <span>{text}</span>
