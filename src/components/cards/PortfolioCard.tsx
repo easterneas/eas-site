@@ -1,7 +1,6 @@
 import { getImageUrlBySize } from "@/lib/strapi";
 import { cn } from "@/lib/utils";
 import type { FunctionalComponent } from "preact";
-import { twMerge } from "tailwind-merge";
 
 const PortfolioCard: FunctionalComponent<{
   portfolio: Portfolio;
@@ -9,6 +8,13 @@ const PortfolioCard: FunctionalComponent<{
     portfolio: Portfolio,
   ) => (e: MouseEvent) => void | Promise<void>;
 }> = ({ portfolio, onCardClick }) => {
+  const src = portfolio.avatar.data
+    ? `${import.meta.env.PUBLIC_API_URL}${getImageUrlBySize(
+        portfolio.avatar,
+        "small",
+      )}`
+    : "";
+
   return (
     <button
       type="button"
@@ -19,26 +25,13 @@ const PortfolioCard: FunctionalComponent<{
       )}
     >
       {portfolio.avatar.data && (
-        <img
-          src={`${import.meta.env.PUBLIC_API_URL}${getImageUrlBySize(
-            portfolio.avatar,
-            "small",
-          )}`}
-          alt={portfolio.name}
-        />
+        <img src={src} alt={portfolio.name} />
       )}
-      <div class={"grid"}>
-        <span class={"text-[24pt] leading-[24pt] font-title"}>
-          {portfolio.name}
-        </span>
-        <div class={"flex justify-between"}>
-          <span class={twMerge(
-            "text-[18pt] font-[100] leading-[18pt] font-title",
-          )}>
-            {portfolio.launched ?? "(ongoing)"}
-          </span>
+      <div class={"grid gap-1"}>
+        <span class={"text-2xl font-[400]"}>{portfolio.name}</span>
+        <div class={"flex justify-between text-sm font-[400]"}>
+          {portfolio.launched ?? "(ongoing)"}
         </div>
-        {/* <div>{portfolio.avatar}</div> */}
       </div>
     </button>
   );

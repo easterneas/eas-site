@@ -49,25 +49,18 @@ const paginator = {
       new Array(1 + paginator.pagesAfterCurrent + paginator.pagesBeforeCurrent)
         .fill("")
         .map((_, i) => paginate.currentPage - paginator.pagesBeforeCurrent + i)
-        .map((page) =>
-          page === paginate.currentPage ? (
-            <div class="active">
-              <span class="pagination__page">{page}</span>
-            </div>
+        .map((page) => {
+          const pageUrlScript = `window.location.href = \`/${
+            paginate.url.current.split("/")[1]
+          }/${page === 1 ? "" : page}\``;
+          const pageSpan = <span class="pagination__page">{page}</span>;
+
+          return page === paginate.currentPage ? (
+            <div class="active">{pageSpan}</div>
           ) : (
-            <button
-              onclick={
-                "window.location.href = `/" +
-                paginate.url.current.split("/")[1] +
-                "/" +
-                page +
-                "`"
-              }
-            >
-              <span class="pagination__page">{page}</span>
-            </button>
-          ),
-        )
+            <button onclick={pageUrlScript}>{pageSpan}</button>
+          );
+        })
     }
   </div>
   {
@@ -87,7 +80,7 @@ const paginator = {
 <style lang="scss">
   #pagination {
     @apply grid;
-    grid-template-columns: minmax(90px, 120px) 1fr minmax(90px, 120px);
+    grid-template-columns: minmax(60px, 90px) 1fr minmax(60px, 90px);
 
     &__pages {
       @apply flex;
@@ -98,8 +91,7 @@ const paginator = {
       button,
       div {
         @apply flex;
-        @apply py-2;
-        @apply px-2;
+        @apply p-2;
         @apply min-w-[50px] min-h-[50px];
         @apply items-center justify-center;
         @apply rounded;
@@ -140,19 +132,4 @@ const paginator = {
       @apply text-left;
     }
   }
-
-  // .pagination__page {
-  //   @apply px-2;
-  //   @apply py-1;
-  //   position: relative;
-  //   text-decoration: none;
-  //   color: white;
-  //   transition: color 120ms cubic-bezier(0.23, 1, 0.32, 1);
-  //   z-index: 0;
-  //   display: block;
-  // }
-
-  // span.pagination__page {
-  //   color: #000000;
-  // }
 </style>

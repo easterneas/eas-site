@@ -11,13 +11,12 @@ export interface Props {
 const { post } = Astro.props;
 const { title: postTitle, published, postContent } = post;
 const tags: string[] = [];
-
 ---
 
-<div class="grid gap-8 relative">
-  <div class="relative flex sm:block items-start justify-start">
+<div class="grid gap-[24px] relative">
+  <div class="relative flex gap-4 sm:block items-start justify-start">
     <div
-      class="sm:absolute grid gap-4 items-end justify-end left-[-116px] w-[116px] pr-[16px]"
+      class="static grid gap-4 items-end self-start justify-end sm:absolute sm:left-[-116px] sm:w-[116px] sm:pr-[16px]"
     >
       <button
         class="hidden sm:[display:_unset]"
@@ -29,7 +28,7 @@ const tags: string[] = [];
       <PostDate date={published as string} />
     </div>
 
-  <Title
+    <Title
       transition:name={`title:${post.slug}`}
       transition:animate="slide"
       text={postTitle}
@@ -40,23 +39,28 @@ const tags: string[] = [];
     {
       (post.content || []).map(({ children, type, level }) => {
         const textsToRender = children.map(({ code, text }) => {
-          if(code) return <code>{text}</code>
-          return <span>{text}</span>
-        })
-        switch(type) {
-          case 'heading':
-            const {text} = children[0]
+          if (code) return <code>{text}</code>;
+          return <span>{text}</span>;
+        });
+        switch (type) {
+          case "heading":
+            const { text } = children[0];
 
-            switch(level){
-              case 1: return <h1>{text}</h1>;
-              case 2: return <h2>{text}</h2>;
-              case 3: return <h3>{text}</h3>;
-              case 4: return <h4>{text}</h4>;
-              case 5: return <h5>{text}</h5>;
+            switch (level) {
+              case 1:
+                return <h1>{text}</h1>;
+              case 2:
+                return <h2>{text}</h2>;
+              case 3:
+                return <h3>{text}</h3>;
+              case 4:
+                return <h4>{text}</h4>;
+              case 5:
+                return <h5>{text}</h5>;
             }
-            return ''
-          case 'paragraph':
-            return <span style="display: inline-block;">{textsToRender}</span>
+            return "";
+          case "paragraph":
+            return <span style="display: inline-block;">{textsToRender}</span>;
         }
       })
     }

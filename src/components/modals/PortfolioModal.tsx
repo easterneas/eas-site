@@ -13,9 +13,9 @@ const PortfolioModal: FunctionalComponent<{
       {...{ open, setOpen }}
       header
       title={
-        <div class={"grid items-center"}>
-          <span class={"font-title text-[24pt] leading-[24pt]"}>{portfolio?.name}</span>
-          <span class={"font-title text-[14pt] leading-[14pt]"}>{portfolio?.launched ?? "(ongoing)"}</span>
+        <div class={"grid items-center gap-1"}>
+          <span class={"font-title font-[600]"}>{portfolio?.name}</span>
+          <span class={"font-title text-sm"}>{portfolio?.launched ?? "(ongoing)"}</span>
         </div>
       }
       width={690}
@@ -26,8 +26,7 @@ const PortfolioModal: FunctionalComponent<{
           portfolio?.avatar?.data && "grid-cols-[1fr_2fr]",
         )}
       >
-        <span>{portfolio?.description}</span>
-        {}
+        <p>{portfolio?.description}</p>
       </div>
     </BaseModal>
   );

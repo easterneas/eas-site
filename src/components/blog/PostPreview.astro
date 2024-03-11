@@ -1,4 +1,5 @@
 ---
+import { twMerge } from "tailwind-merge";
 import Link from "../Link.astro";
 import PostDate from "../blocks/PostDate";
 
@@ -12,22 +13,30 @@ const url = `/blog/post/${slug}`;
 ---
 
 <div
-  class="border-[1px] p-4 grid grid-cols-[60px_1fr] sm:grid-cols-[80px_1fr] items-start gap-4 relative rounded-[8px]"
+  class={twMerge(
+    "border-[1px] p-4 grid gap-5 relative rounded-[8px]",
+  )}
 >
-  <PostDate date={published as string} />
+  <div class={twMerge(
+    "grid grid-cols-[60px_1fr] items-start gap-4",
+    "sm:grid-cols-[80px_1fr]",
+  )}>
+    <PostDate date={published as string} />
 
-  <div>
-    <Link
-      transition:name={`title:${slug}`}
-      transition:animate="slide"
-      text={title}
-      to={url}
-      size={"title"}
-    />
+    <div class="grid gap-2">
+      <Link
+        transition:name={`title:${slug}`}
+        transition:animate="slide"
+        text={title}
+        to={url}
+        size={"title"}
+      />
 
-    <p>{excerpt || "(No summary provided)"}</p>
+      <p class="hidden sm:block">{excerpt || "(No summary provided)"}</p>
+    </div>
   </div>
-  <!-- </article> -->
+
+  <p class="block sm:hidden">{excerpt || "(No summary provided)"}</p>
 </div>
 
 <style lang="scss">
