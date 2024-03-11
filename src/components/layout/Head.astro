@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { title, description, permalink } = Astro.props;
-const siteName = PUBLIC_SITE_NAME || ""
+const siteName = PUBLIC_SITE_NAME || "";
 
 let siteTitle: string = siteName;
 
@@ -45,7 +45,21 @@ if (title) siteTitle = `${title} | ${siteName}`;
 <link
   href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Inter:wght@400;700&display=swap"
   rel="stylesheet"
+  media="print" onload="this.onload=null;this.removeAttribute('media');"
 />
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Zeyada&display=swap" rel="stylesheet">
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/styles/nord.min.css"
+  onload="this.onload=null;this.removeAttribute('media');"
+/>
 
-<link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/styles/nord.min.css" />
+<noscript>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Inter:wght@400;700&display=swap"
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/styles/nord.min.css"
+  />
+</noscript>

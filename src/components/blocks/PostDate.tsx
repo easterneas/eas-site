@@ -16,17 +16,14 @@ const PostDate: FunctionComponent<{
               <span class="date__month">{formattedDate.format("MMM")}</span>
               <span class="date__day">{formattedDate.format("DD")}</span>
             </div>
-            <div>
-              <span class="date__year">{formattedDate.format("YYYY")}</span>
-            </div>
+
+            <span class="date__year hidden sm:[display:_unset] text-center">{formattedDate.format("YYYY")}</span>
           </>
         ) : (
-          <>
-            <div class="date__block rounded">
-              <span class="date__year">{formattedDate.format("YYYY")}</span>
-              <span class="date__month">{formattedDate.format("MMM")}</span>
-            </div>
-          </>
+          <div class="date__block rounded">
+            <span class="date__year">{formattedDate.format("YYYY")}</span>
+            <span class="date__month">{formattedDate.format("MMM")}</span>
+          </div>
         )}
       </section>
     </div>

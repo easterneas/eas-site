@@ -31,11 +31,11 @@ export default function BaseModal({
         <div className={"grid gap-[8px]"}>
           <div
             className={twMerge(
-              "flex justify-between",
+              "flex justify-between items-start",
               headerOverride?.className,
             )}
           >
-            <Dialog.Title as="h3" className={twMerge("font-[700]")}>
+            <Dialog.Title as="h3">
               {title}
             </Dialog.Title>
 
@@ -46,7 +46,7 @@ export default function BaseModal({
                 onClick={closeModal}
                 className={twMerge(
                   "outline-none p-[12px] border-0",
-                  header || "absolute right-[8px] top-[8px]",
+                  "absolute right-[24px] top-[24px]",
                 )}
               >
                 <Icon name="X" />
@@ -63,7 +63,7 @@ export default function BaseModal({
           onClick={closeModal}
           className={twMerge(
             "outline-none p-[12px]",
-            header || "absolute right-[8px] top-[8px]",
+            "absolute right-[8px] top-[8px]",
           )}
         >
           <MdClose />
@@ -92,7 +92,7 @@ export default function BaseModal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25 z-[2]" />
+          <div className="fixed inset-0 bg-black bg-opacity-25 z-[2] backdrop-blur" />
         </Transition.Child>
 
       <div className="fixed inset-0 overflow-y-auto z-[3]">
@@ -109,7 +109,7 @@ export default function BaseModal({
               <Dialog.Panel
                 style={{ width }}
                 className={twMerge(
-                  "transform relative rounded-[8px] p-[16px] grid gap-[24px] bg-darkSecondary border-[1px] border-[#fc0] text-left align-middle shadow-xl transition-all",
+                  "transform relative rounded-[8px] p-[24px] grid gap-[24px] bg-darkSecondary border-[1px] border-[#fc0] text-left align-middle shadow-xl transition-all",
                   className,
                 )}
               >

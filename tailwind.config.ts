@@ -15,7 +15,7 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        title: ['"Nanum Pen Script"'],
+        title: ['Inter'],
       },
       colors: {
         darkPrimary: "rgb(10, 17, 32)",

@@ -1,0 +1,66 @@
+h1,
+h2,
+h3,
+h4,
+h5 {
+  @apply text-[#ffcc00];
+  /* @apply font-title; */
+}
+
+h1 {
+  @apply text-4xl;
+  @apply font-[300];
+}
+
+h2 {
+  @apply text-3xl;
+  @apply font-[300];
+}
+
+h3 {
+  @apply text-2xl;
+}
+
+h4, h5 {
+  @apply font-[700];
+}
+
+
+@media screen and (max-width: 640px) {
+  h1 {
+    @apply text-2xl;
+    /* @apply leading-[unset]; */
+  }
+
+  h2 {
+    @apply text-2xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  h4 {
+    @apply text-lg;
+  }
+}
+
+p {
+  @apply text-[1.25rem];
+  @apply leading-[1.75rem];
+}
+
+section p {
+  @apply mb-2;
+}
+
+section * a {
+  position: relative;
+  z-index: 0;
+  color: #fc0;
+  transition: color 250ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+section * a:hover {
+  color: #fff;
+}

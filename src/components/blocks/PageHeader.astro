@@ -10,7 +10,7 @@ type Props = {
 const { Icon, className } = Astro.props
 ---
 
-<div class={twMerge("text-5xl flex")}>
+<div class={twMerge("text-3xl flex")}>
   <div
     class={twMerge(
       "flex border-[2px] border-white rounded-[8px] h-full overflow-hidden",
@@ -18,10 +18,9 @@ const { Icon, className } = Astro.props
     )}
   >
     {Icon && <div class={"h-full px-[20px] flex text-black bg-white"}><Icon /></div>}
-    <div class={"flex gap-4 font-title select-none font-[400] p-2 px-4 "}>
-      <span>
-        <slot />
-      </span>
+
+    <div class={"flex gap-4 font-title select-none p-3 px-4 "}>
+      <slot />
     </div>
   </div>
 </div>

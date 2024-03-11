@@ -1,6 +1,5 @@
 ---
 import PageHeader from "@/components/blocks/PageHeader.astro";
-import MarkdownContent from "@/components/blocks/post-content/MarkdownContent";
 import PostPreview from "@/components/blog/PostPreview.astro";
 import Paginator from "@/components/partials/Paginator.astro";
 import Base from "@/layouts/Base.astro";
@@ -27,8 +26,6 @@ const {
   page: { data, ...paginator },
 } = Astro.props as Props;
 
-console.log({data, paginator})
-
 const mdString = "I occassionally post here, with different kinds of topics that I usually encounter.";
 
 const pageMeta = {
@@ -43,9 +40,7 @@ const pageMeta = {
        Blog
     </PageHeader>
 
-    <article>
-      <MarkdownContent md={mdString} client:load />
-    </article>
+    <p>{mdString}</p>
 
     <div class="mx-auto md:max-w-[800px] grid gap-8">
       {data.map((p) => <PostPreview post={p} />)}
