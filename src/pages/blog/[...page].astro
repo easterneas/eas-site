@@ -12,7 +12,7 @@ import { PencilLineIcon } from "lucide-react";
 
 export const getStaticPaths = (async ({ paginate }) => {
   const { posts: postCollection } = store;
-  const response = await postCollection.getPosts();
+  const response = await postCollection.getPosts().catch(() => null);
 
   if (!response) return paginate([]);
 
@@ -26,6 +26,8 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const {
   page: { data, ...paginator },
 } = Astro.props as Props;
+
+console.log({data, paginator})
 
 const mdString = "I occassionally post here, with different kinds of topics that I usually encounter.";
 
