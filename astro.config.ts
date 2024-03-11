@@ -1,17 +1,16 @@
 /// <reference types="astro/client" />
 /// <reference types="./src/env.d.ts" />
 
-import cloudflare from "@astrojs/cloudflare";
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
 import tailwind from "@astrojs/tailwind";
-import { AstroUserConfig, defineConfig } from "astro/config";
+import { defineConfig, type AstroUserConfig } from "astro/config";
 
 import { resolve } from "path";
 
 const config: AstroUserConfig = {
   compressHTML: process.env.NODE_ENV === "production",
-  output: "hybrid",
+  output: "static",
   vite: {
     build: {
       outDir: "build",
@@ -39,12 +38,6 @@ const config: AstroUserConfig = {
   redirects: {
     "/blog": "/blog/1",
   },
-  adapter: cloudflare({
-    runtime: {
-      mode: "local",
-      type: "pages"
-    }
-  })
 };
 
 if (process.env.NODE_ENV === "production") {
