@@ -4,14 +4,18 @@
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
 import tailwind from "@astrojs/tailwind";
-import { defineConfig, type AstroUserConfig } from "astro/config";
+import { type AstroUserConfig } from "astro";
+import { defineConfig } from "astro/config";
 
 import { resolve } from "path";
 
 const config: AstroUserConfig = {
   compressHTML: process.env.NODE_ENV === "production",
-  output: "static",
+  output: "server",
   vite: {
+    ssr: {
+      external: ['node:buffer'],
+    },
     build: {
       outDir: "build",
     },
