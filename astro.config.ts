@@ -6,11 +6,16 @@ import preact from "@astrojs/preact";
 import tailwind from "@astrojs/tailwind";
 import { type AstroUserConfig } from "astro";
 import { defineConfig } from "astro/config";
+import cloudflare from '@astrojs/cloudflare';
 
 import { resolve } from "path";
 
 const config: AstroUserConfig = {
+  adapter: cloudflare({
+    imageService: "passthrough"
+  }),
   compressHTML: process.env.NODE_ENV === "production",
+  site: process.env.PUBLIC_SITE_URL,
   output: "server",
   vite: {
     ssr: {
@@ -43,10 +48,6 @@ const config: AstroUserConfig = {
     "/blog": "/blog/1",
   },
 };
-
-if (process.env.NODE_ENV === "production") {
-  config.site = "https://eas.web.id";
-}
 
 // https://astro.build/config
 export default defineConfig(config);
