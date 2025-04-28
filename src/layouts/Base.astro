@@ -8,7 +8,7 @@ import "./styles/base-typography.css";
 import Footer from "@/components/layout/Footer.astro";
 import Head from "@/components/layout/Head.astro";
 import Navigator from "@/components/layout/Navigator.astro";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 
 type Props = BaseLayoutProps;
 
@@ -18,7 +18,7 @@ const { meta } = Astro.props;
 <html lang={"en"}>
   <head>
     <Head title={meta.title} description={meta.excerpt} permalink="" />
-    <ViewTransitions />
+    <ClientRouter />
   </head>
 
   <body class="grid grid-cols-1 sm:grid-cols-[120px_1fr] h-screen w-screen bg-darkPrimary">
