@@ -1,11 +1,11 @@
 import BaseModal from "@/components/base/BaseModal";
 import { cn } from "@/lib/utils";
 import type { FunctionalComponent } from "preact";
-import type { StateUpdater } from "preact/hooks";
+import type { Dispatch, StateUpdater } from "preact/hooks";
 
 const PortfolioModal: FunctionalComponent<{
   open: boolean;
-  setOpen: StateUpdater<boolean>;
+  setOpen: Dispatch<StateUpdater<boolean>>;
   portfolio: Portfolio | null;
 }> = ({ open, setOpen, portfolio }) => {
   return (

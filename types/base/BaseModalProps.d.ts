@@ -1,10 +1,10 @@
 import type { VNode } from "preact";
-import type { StateUpdater } from "preact/hooks";
+import type { Dispatch, StateUpdater } from "preact/hooks";
 
 type BaseModalProps = {
   children?: VNode | VNode[];
   open: boolean;
-  setOpen: StateUpdater<boolean>;
+  setOpen: Dispatch<StateUpdater<boolean>>;
 
   openStringCondition?: string;
   footer?: VNode | VNode[]
