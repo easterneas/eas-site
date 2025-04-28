@@ -4,24 +4,27 @@
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
 import tailwind from "@astrojs/tailwind";
-import { type AstroUserConfig } from "astro";
-import { defineConfig } from "astro/config";
+import { defineConfig, passthroughImageService } from "astro/config";
 import yaml from "@rollup/plugin-yaml";
 import cloudflare from "@astrojs/cloudflare";
 
-import { resolve } from "path";
+import { resolve } from "node:path";
 
-const config: AstroUserConfig = {
+// https://astro.build/config
+export default defineConfig({
   adapter: cloudflare({
     imageService: "passthrough",
   }),
+  image: {
+    service: passthroughImageService()
+  },
   compressHTML: process.env.NODE_ENV === "production",
   site: process.env.PUBLIC_SITE_URL,
   output: "server",
   vite: {
     plugins: [yaml()],
     ssr: {
-      external: ["node:buffer"],
+      external: ["node:buffer", "rollup"],
     },
     build: {
       outDir: "build",
@@ -49,7 +52,4 @@ const config: AstroUserConfig = {
   redirects: {
     "/blog": "/blog/1",
   },
-};
-
-// https://astro.build/config
-export default defineConfig(config);
+});
