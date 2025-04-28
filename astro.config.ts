@@ -6,20 +6,22 @@ import preact from "@astrojs/preact";
 import tailwind from "@astrojs/tailwind";
 import { type AstroUserConfig } from "astro";
 import { defineConfig } from "astro/config";
-import cloudflare from '@astrojs/cloudflare';
+import yaml from "@rollup/plugin-yaml";
+import cloudflare from "@astrojs/cloudflare";
 
 import { resolve } from "path";
 
 const config: AstroUserConfig = {
   adapter: cloudflare({
-    imageService: "passthrough"
+    imageService: "passthrough",
   }),
   compressHTML: process.env.NODE_ENV === "production",
   site: process.env.PUBLIC_SITE_URL,
   output: "server",
   vite: {
+    plugins: [yaml()],
     ssr: {
-      external: ['node:buffer'],
+      external: ["node:buffer"],
     },
     build: {
       outDir: "build",
