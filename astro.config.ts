@@ -14,9 +14,12 @@ import { resolve } from "node:path";
 export default defineConfig({
   adapter: cloudflare({
     imageService: "passthrough",
+    platformProxy: {
+      enabled: true
+    }
   }),
   image: {
-    service: passthroughImageService()
+    service: passthroughImageService(),
   },
   compressHTML: process.env.NODE_ENV === "production",
   site: process.env.PUBLIC_SITE_URL,
@@ -24,7 +27,7 @@ export default defineConfig({
   vite: {
     plugins: [yaml()],
     ssr: {
-      external: ["node:buffer", "rollup"],
+      external: ["node:buffer", "rollup", "axios"],
     },
     build: {
       outDir: "build",
