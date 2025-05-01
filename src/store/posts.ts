@@ -15,14 +15,7 @@ async function getPaginatedPosts() {
 
   if (!response) return null;
 
-  const {
-    data: { data: posts, meta: paginationMeta },
-  } = response;
-
-  return {
-    data: posts.map(({ id, attributes }) => ({ id, ...attributes })),
-    meta: paginationMeta,
-  };
+  return response.data;
 }
 
 async function getPosts() {
@@ -30,14 +23,7 @@ async function getPosts() {
 
   if (!response) return null;
 
-  const {
-    data: { data: posts, meta: paginationMeta },
-  } = response;
-
-  return {
-    data: posts.map(({ id, attributes }) => ({ id, ...attributes })),
-    meta: paginationMeta,
-  };
+  return response.data;
 }
 
 async function getLatestPosts() {
@@ -45,14 +31,7 @@ async function getLatestPosts() {
 
   if (!response) return null;
 
-  const {
-    data: { data: posts, meta: paginationMeta },
-  } = response;
-
-  return {
-    data: posts.map(({ id, attributes }) => ({ id, ...attributes })),
-    meta: paginationMeta,
-  };
+  return response.data;
 }
 
 export default {

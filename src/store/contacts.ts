@@ -1,18 +1,11 @@
 import { contactService } from "../services/contactService";
 
 async function getContacts() {
-    const response = await contactService.getAll().catch(console.log);
+  const response = await contactService.getAll().catch(console.trace);
 
   if (!response) return null;
 
-  const {
-    data: { data: posts, meta: paginationMeta },
-  } = response;
-
-  return {
-    data: posts.map(({ id, attributes }) => ({ id, ...attributes })),
-    meta: paginationMeta,
-  };
+  return response.data;
 }
 
 export default {
