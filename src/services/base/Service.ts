@@ -1,26 +1,43 @@
-import type { AxiosRequestConfig, Method } from "axios";
-import axios, { AxiosError } from "axios";
-
 import { ServiceError } from "./ServiceError";
 
-const { CancelToken } = axios;
-const source = CancelToken.source();
+// Define our own types to replace Axios types
+type Method = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+
+export interface RequestConfig {
+  headers?: Record<string, string>;
+  timeout?: number;
+  params?: Record<string, unknown>;
+  responseType?: string;
+  signal?: AbortSignal;
+  body?: any;
+  method?: string;
+}
+
+export interface ResponseData<T = any> {
+  data: T;
+  status: number;
+  statusText: string;
+  headers: Record<string, string>;
+  config: RequestConfig;
+}
 
 export class Service {
   url: string;
   token: string = import.meta.env.API_TOKEN;
-  config: AxiosRequestConfig;
+  config: RequestConfig;
+  abortController: AbortController;
 
   constructor(url: string, token?: string) {
     this.url = url;
     this.token = token || import.meta.env.API_TOKEN;
+    this.abortController = new AbortController();
     this.config = {
       headers: {
         Authorization: `Bearer ${this.token}`,
         "Content-Type": "application/json",
       },
       timeout: 60000,
-      cancelToken: source.token,
+      signal: this.abortController.signal,
     };
   }
 
@@ -30,24 +47,14 @@ export class Service {
     }
   }
 
-  handleError(
-    error:
-      | AxiosError<{ statusCode: number; message: string }>
-      | Error
-      | unknown,
-  ) {
+  handleError(error: Response | Error | unknown) {
     const serviceError = new ServiceError(
       -1,
-      "Sorry, it looks like there is a network issue.",
+      "Sorry, it looks like there is a network issue."
     );
 
-    if (error instanceof AxiosError) {
-      serviceError.code = error.response?.status || serviceError.code;
-
-      if (error?.response?.data) {
-        serviceError.message = error.response.data.message;
-      }
-
+    if (error instanceof Response) {
+      serviceError.code = error.status || serviceError.code;
       return serviceError;
     }
 
@@ -56,20 +63,89 @@ export class Service {
       return serviceError;
     }
 
-    if (!(error instanceof AxiosError)) {
-      return serviceError;
+    return serviceError;
+  }
+
+  async parseResponse(response: Response): Promise<ResponseData> {
+    let data;
+    const contentType = response.headers.get('content-type');
+
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else if (this.config.responseType === 'arraybuffer') {
+      data = await response.arrayBuffer();
+    } else {
+      data = await response.text();
+    }
+
+    if (!response.ok) {
+      const error = new Error(data.message || response.statusText) as any;
+      error.response = { status: response.status, data };
+      throw error;
+    }
+
+    const headers: Record<string, string> = {};
+    response.headers.forEach((value, key) => {
+      headers[key] = value;
+    });
+
+    return {
+      data,
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+      config: this.config
+    };
+  }
+
+  buildUrl(url: string, params?: Record<string, unknown>): string {
+    if (!params) return url;
+
+    const searchParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        searchParams.append(key, String(value));
+      }
+    });
+
+    const queryString = searchParams.toString();
+    return queryString ? `${url}?${queryString}` : url;
+  }
+
+  async fetchWithTimeout(url: string, options: RequestConfig = {}): Promise<Response> {
+    const { timeout, ...fetchOptions } = options;
+
+    if (!timeout) {
+      return fetch(url, fetchOptions as RequestInit);
+    }
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const response = await fetch(url, {
+        ...fetchOptions,
+        signal
+      } as RequestInit);
+      clearTimeout(timeoutId);
+      return response;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      throw error;
     }
   }
 
   async download(
     method: Method,
     param: Record<string, unknown>,
-    additionalConfig?: AxiosRequestConfig,
+    additionalConfig?: RequestConfig,
   ) {
     this.config = {
       ...this.config,
       ...additionalConfig,
-      timeout: Infinity,
+      timeout: undefined, // Infinity equivalent
     };
 
     switch (method.toLowerCase()) {
@@ -79,7 +155,7 @@ export class Service {
         return this.post(param);
       default:
         throw new Error(
-          "Invalid method is used. You should use get or post method only.",
+          "Invalid method is used. You should use get or post method only."
         );
     }
   }
@@ -91,16 +167,22 @@ export class Service {
       throw this.handleError(new Error("No token provided. Exiting."));
     }
 
-    if (param) this.config.params = param;
-
     try {
-      return await axios.get(this.url, this.config);
+      const url = this.buildUrl(this.url, param);
+      const response = await this.fetchWithTimeout(url, {
+        method: 'GET',
+        headers: this.config.headers,
+        signal: this.config.signal,
+        timeout: this.config.timeout
+      });
+
+      return this.parseResponse(response);
     } catch (error) {
       throw this.handleError(error);
     }
   }
 
-  async getFile(opts: AxiosRequestConfig = { responseType: "arraybuffer" }) {
+  async getFile(opts: RequestConfig = { responseType: "arraybuffer" }) {
     this.initialize();
 
     if (!this.token) {
@@ -112,9 +194,18 @@ export class Service {
       ...opts,
     };
 
-    return axios.get(this.url, this.config).catch((e) => {
-      throw this.handleError(e);
-    });
+    try {
+      const response = await this.fetchWithTimeout(this.url, {
+        method: 'GET',
+        headers: this.config.headers,
+        signal: this.config.signal,
+        timeout: this.config.timeout
+      });
+
+      return this.parseResponse(response);
+    } catch (error) {
+      throw this.handleError(error);
+    }
   }
 
   async getWithoutToken(param: Record<string, unknown>) {
@@ -126,12 +217,16 @@ export class Service {
       Expires: "0",
     };
 
-    if (param) {
-      this.config.params = param;
-    }
-
     try {
-      return await axios.get(this.url, this.config);
+      const url = this.buildUrl(this.url, param);
+      const response = await this.fetchWithTimeout(url, {
+        method: 'GET',
+        headers: this.config.headers,
+        signal: this.config.signal,
+        timeout: this.config.timeout
+      });
+
+      return this.parseResponse(response);
     } catch (error) {
       throw this.handleError(error);
     }
@@ -139,7 +234,7 @@ export class Service {
 
   async post(
     param: FormData | Record<string, unknown>,
-    additionalConfig: AxiosRequestConfig = {},
+    additionalConfig: RequestConfig = {},
   ) {
     this.initialize();
 
@@ -152,12 +247,24 @@ export class Service {
       ...additionalConfig,
       headers: {
         ...this.config.headers,
-        ...additionalConfig.headers,
+        ...(additionalConfig.headers || {}),
       },
     };
 
     try {
-      return await axios.post(this.url, param, this.config);
+      const body = param instanceof FormData
+        ? param
+        : JSON.stringify(param);
+
+      const response = await this.fetchWithTimeout(this.url, {
+        method: 'POST',
+        headers: this.config.headers,
+        body,
+        signal: this.config.signal,
+        timeout: this.config.timeout
+      });
+
+      return this.parseResponse(response);
     } catch (error) {
       throw this.handleError(error);
     }
@@ -167,7 +274,15 @@ export class Service {
     this.initialize();
 
     try {
-      return await axios.post(this.url, param, this.config);
+      const response = await this.fetchWithTimeout(this.url, {
+        method: 'POST',
+        headers: this.config.headers,
+        body: JSON.stringify(param),
+        signal: this.config.signal,
+        timeout: this.config.timeout
+      });
+
+      return this.parseResponse(response);
     } catch (error) {
       throw this.handleError(error);
     }
@@ -181,7 +296,15 @@ export class Service {
     }
 
     try {
-      return await axios.put(this.url, param, this.config);
+      const response = await this.fetchWithTimeout(this.url, {
+        method: 'PUT',
+        headers: this.config.headers,
+        body: JSON.stringify(param),
+        signal: this.config.signal,
+        timeout: this.config.timeout
+      });
+
+      return this.parseResponse(response);
     } catch (error) {
       throw this.handleError(error);
     }
@@ -195,7 +318,15 @@ export class Service {
     }
 
     try {
-      return await axios.patch(this.url, payload, this.config);
+      const response = await this.fetchWithTimeout(this.url, {
+        method: 'PATCH',
+        headers: this.config.headers,
+        body: JSON.stringify(payload),
+        signal: this.config.signal,
+        timeout: this.config.timeout
+      });
+
+      return this.parseResponse(response);
     } catch (error) {
       throw this.handleError(error);
     }
@@ -209,7 +340,14 @@ export class Service {
     }
 
     try {
-      return await axios.delete(this.url, this.config);
+      const response = await this.fetchWithTimeout(this.url, {
+        method: 'DELETE',
+        headers: this.config.headers,
+        signal: this.config.signal,
+        timeout: this.config.timeout
+      });
+
+      return this.parseResponse(response);
     } catch (error) {
       throw this.handleError(error);
     }
