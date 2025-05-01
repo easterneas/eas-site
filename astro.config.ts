@@ -27,7 +27,7 @@ export default defineConfig({
   vite: {
     plugins: [yaml()],
     ssr: {
-      external: ["node:buffer", "rollup", "axios"],
+      external: ["node:buffer", "rollup"],
     },
     build: {
       outDir: "build",
