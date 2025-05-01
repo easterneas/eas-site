@@ -39,7 +39,7 @@ export const postService = {
     slug: string,
   ): Promise<AxiosResponse<StrapiResponse<Post>, unknown>> => {
     return new Service(
-      serviceUrls.postPath(`?filters[slug][$eqi]=${slug}`),
+      serviceUrls.onePostPath(slug),
     ).getWithoutToken({});
   },
 };

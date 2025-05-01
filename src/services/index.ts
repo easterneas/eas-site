@@ -9,6 +9,7 @@ const serviceUrls = {
 
   contactPath: (endpoint?: string) => endpointParser("contacts", endpoint),
   postPath: (endpoint?: string) => endpointParser("posts", endpoint),
+  onePostPath: (endpoint?: string) => endpointParser("post", endpoint),
   portfolioPath: (endpoint?: string) => endpointParser("portfolios", endpoint),
 };
 
