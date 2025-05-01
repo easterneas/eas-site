@@ -4,8 +4,6 @@ import { endpointParser } from "@/utils/parsers/endpointParser";
 // https://<YOUR_DOMAIN>/api/<YOUR_CT>
 export const apiUrl = `${PUBLIC_API_URL}/api`;
 
-console.warn({ PUBLIC_API_URL, apiUrl });
-
 const serviceUrls = {
   dynamicPath: (endpoint: string) => `${apiUrl}/${endpoint}`,
 
