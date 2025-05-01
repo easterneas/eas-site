@@ -1,42 +1,29 @@
 ---
-type Pagination = {
-  start: number;
-  end: number;
-  total: number;
-  currentPage: number;
-  size: number;
-  lastPage: number;
-  url: {
-    current: string;
-    prev: string | undefined;
-    next: string | undefined;
-  };
-};
-
 type Props = {
-  paginate: Pagination;
+  paginate: StrapiMetadata;
 };
 
 const { paginate } = Astro.props;
+const { pagination } = paginate
 
 const paginator = {
-  showPrev: paginate.currentPage !== 1,
-  showNext: paginate.currentPage !== paginate.lastPage,
+  showPrev: pagination.page !== 1,
+  showNext: pagination.page !== pagination.pageCount,
   pagesBeforeCurrent:
-    paginate.currentPage - 1 > 2 ? 2 : paginate.currentPage - 1,
+    pagination.page - 1 > 2 ? 2 : pagination.page - 1,
   pagesAfterCurrent:
-    paginate.lastPage - paginate.currentPage > 2
+    pagination.pageCount - pagination.page > 2
       ? 2
-      : paginate.lastPage - paginate.currentPage,
+      : pagination.pageCount - pagination.page,
 };
 ---
 
 <div id="pagination">
   {
-    paginate.currentPage !== 1 ? (
+    pagination.page !== 1 ? (
       <button
         id="pagination__prev"
-        onclick={"window.location.href = '" + paginate.url.prev + "'"}
+        onclick={"window.location.href = '../" + (pagination.page - 1) + "'"}
       >
         Newer
       </button>
@@ -48,14 +35,12 @@ const paginator = {
     {
       new Array(1 + paginator.pagesAfterCurrent + paginator.pagesBeforeCurrent)
         .fill("")
-        .map((_, i) => paginate.currentPage - paginator.pagesBeforeCurrent + i)
+        .map((_, i) => pagination.page - paginator.pagesBeforeCurrent + i)
         .map((page) => {
-          const pageUrlScript = `window.location.href = \`/${
-            paginate.url.current.split("/")[1]
-          }/${page === 1 ? "" : page}\``;
+          const pageUrlScript = `window.location.href = '../${page === 1 ? "" : page}'`;
           const pageSpan = <span class="pagination__page">{page}</span>;
 
-          return page === paginate.currentPage ? (
+          return page === pagination.page ? (
             <div class="active">{pageSpan}</div>
           ) : (
             <button onclick={pageUrlScript}>{pageSpan}</button>
@@ -64,10 +49,10 @@ const paginator = {
     }
   </div>
   {
-    paginate.currentPage !== paginate.lastPage && paginate.url.next ? (
+    pagination.page !== pagination.pageCount ? (
       <button
         id="pagination__next"
-        onclick={"window.location.href = '" + paginate.url.next + "'"}
+        onclick={"window.location.href = '../" + (pagination.page + 1) + "'"}
       >
         Older
       </button>
