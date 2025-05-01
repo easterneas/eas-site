@@ -2,10 +2,11 @@ import type { AxiosResponse } from "axios";
 
 import serviceUrls from ".";
 import { Service } from "./base/Service";
+import type { StrapiResponse } from "types/base/StrapiResponse";
 
 export const postService = {
   getAllPaginated: async (): Promise<
-    AxiosResponse<StrapiArrayResponse<Post>, unknown>
+    AxiosResponse<StrapiResponse<Post[]>, unknown>
   > => {
     return new Service(
       serviceUrls.postPath("?sort[0]=published:desc&sort[1]=publishedAt:desc"),
@@ -13,7 +14,7 @@ export const postService = {
   },
 
   getAll: async (): Promise<
-    AxiosResponse<StrapiArrayResponse<Post>, unknown>
+    AxiosResponse<StrapiResponse<Post[]>, unknown>
   > => {
     return new Service(
       serviceUrls.postPath("?sort[0]=published:desc&sort[1]=publishedAt:desc&pagination[pageSize]=999999&pagination[withCount]=false"),
@@ -21,7 +22,7 @@ export const postService = {
   },
 
   getRecents: async (): Promise<
-    AxiosResponse<StrapiArrayResponse<Post>, unknown>
+    AxiosResponse<StrapiResponse<Post[]>, unknown>
   > => {
     return new Service(
       serviceUrls.postPath("?sort[0]=published:desc&sort[1]=publishedAt:desc&pagination[pageSize]=3&pagination[withCount]=false"),
@@ -29,14 +30,14 @@ export const postService = {
   },
 
   getOne: async (): Promise<
-    AxiosResponse<StrapiSingleResponse<Post>, unknown>
+    AxiosResponse<StrapiResponse<Post>, unknown>
   > => {
     return new Service(serviceUrls.postPath()).getWithoutToken({});
   },
 
   getBySlug: async (
     slug: string,
-  ): Promise<AxiosResponse<StrapiSingleResponse<Post>, unknown>> => {
+  ): Promise<AxiosResponse<StrapiResponse<Post>, unknown>> => {
     return new Service(
       serviceUrls.postPath(`?filters[slug][$eqi]=${slug}`),
     ).getWithoutToken({});
