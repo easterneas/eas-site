@@ -11,7 +11,7 @@ async function getCollection() {
 }
 
 async function getPaginatedPosts() {
-    const response = await postService.getAll();
+  const response = await postService.getAll();
 
   if (!response) return null;
 
@@ -19,7 +19,17 @@ async function getPaginatedPosts() {
 }
 
 async function getPosts() {
-    const response = await postService.getAll();
+  const response = await postService.getAll();
+
+  if (!response) return null;
+
+  return response.data;
+}
+
+async function getPostBySlug(slug?: string) {
+  if (!slug) return;
+
+  const response = await postService.getBySlug(slug);
 
   if (!response) return null;
 
@@ -27,7 +37,7 @@ async function getPosts() {
 }
 
 async function getLatestPosts() {
-    const response = await postService.getRecents();
+  const response = await postService.getRecents();
 
   if (!response) return null;
 
@@ -39,4 +49,5 @@ export default {
   getPosts,
   getLatestPosts,
   getPaginatedPosts,
+  getPostBySlug,
 };
