@@ -35,7 +35,7 @@ export default defineConfig({
       external: ["node:buffer", "rollup"],
     },
     build: {
-      outDir: "build",
+      outDir: "dist",
     },
     resolve: {
       alias: [
