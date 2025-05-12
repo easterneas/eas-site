@@ -7,10 +7,11 @@ import tailwind from "@astrojs/tailwind";
 import { defineConfig, passthroughImageService } from "astro/config";
 import yaml from "@rollup/plugin-yaml";
 import cloudflare from "@astrojs/cloudflare";
+import { loadEnv } from "vite";
 
 import { resolve } from "node:path";
 
-console.log(process.env)
+const env = loadEnv(`${process.env.NODE_ENV}`, process.cwd(), "");
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,9 +24,7 @@ export default defineConfig({
   image: {
     service: passthroughImageService(),
   },
-  env: {
-    //
-  },
+  env,
   compressHTML: false,
   // compressHTML: process.env.NODE_ENV === "production",
   // site: process.env.PUBLIC_SITE_URL,
