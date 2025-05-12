@@ -1,4 +1,4 @@
-import posts from "./posts"
+import * as posts from "./posts"
 import portfolios from "./portfolios"
 import contacts from "./contacts"
 

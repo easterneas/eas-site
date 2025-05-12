@@ -1,6 +1,6 @@
 import { postService } from "../services/postService";
 
-async function getCollection() {
+export async function getCollection() {
   try {
     const collections = await postService.getAll();
     return collections;
@@ -10,7 +10,7 @@ async function getCollection() {
   }
 }
 
-async function getPaginatedPosts() {
+export async function getPaginatedPosts() {
   const response = await postService.getAll();
 
   if (!response) return null;
@@ -18,7 +18,7 @@ async function getPaginatedPosts() {
   return response.data;
 }
 
-async function getPosts() {
+export async function getPosts() {
   const response = await postService.getAll();
 
   if (!response) return null;
@@ -26,7 +26,7 @@ async function getPosts() {
   return response.data;
 }
 
-async function getPostBySlug(slug?: string) {
+export async function getPostBySlug(slug?: string) {
   if (!slug) return;
 
   const response = await postService.getBySlug(slug);
@@ -36,18 +36,12 @@ async function getPostBySlug(slug?: string) {
   return response.data;
 }
 
-async function getLatestPosts() {
+export async function getLatestPosts() {
   const response = await postService.getRecents();
+
+  console.log({response})
 
   if (!response) return null;
 
   return response.data;
 }
-
-export default {
-  getCollection,
-  getPosts,
-  getLatestPosts,
-  getPaginatedPosts,
-  getPostBySlug,
-};
