@@ -10,6 +10,8 @@ import cloudflare from "@astrojs/cloudflare";
 
 import { resolve } from "node:path";
 
+console.log(process.env)
+
 // https://astro.build/config
 export default defineConfig({
   adapter: cloudflare({
@@ -21,8 +23,12 @@ export default defineConfig({
   image: {
     service: passthroughImageService(),
   },
-  compressHTML: process.env.NODE_ENV === "production",
-  site: process.env.PUBLIC_SITE_URL,
+  env: {
+    //
+  },
+  compressHTML: false,
+  // compressHTML: process.env.NODE_ENV === "production",
+  // site: process.env.PUBLIC_SITE_URL,
   output: "server",
   vite: {
     plugins: [yaml()],
