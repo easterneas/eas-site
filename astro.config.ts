@@ -11,7 +11,7 @@ import { loadEnv } from "vite";
 
 import { resolve } from "node:path";
 
-const env = loadEnv(`${process.env.NODE_ENV}`, process.cwd(), "");
+loadEnv(`${process.env.NODE_ENV}`, process.cwd(), "");
 
 // https://astro.build/config
 export default defineConfig({
@@ -24,7 +24,6 @@ export default defineConfig({
   image: {
     service: passthroughImageService(),
   },
-  env,
   compressHTML: false,
   // compressHTML: process.env.NODE_ENV === "production",
   // site: process.env.PUBLIC_SITE_URL,
