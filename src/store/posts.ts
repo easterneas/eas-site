@@ -1,6 +1,6 @@
 import { postService } from "../services/postService";
 
-async function getCollection() {
+export async function getCollection() {
   try {
     const collections = await postService.getAll();
     return collections;
@@ -10,54 +10,38 @@ async function getCollection() {
   }
 }
 
-async function getPaginatedPosts() {
-    const response = await postService.getAll();
+export async function getPaginatedPosts() {
+  const response = await postService.getAll();
 
   if (!response) return null;
 
-  const {
-    data: { data: posts, meta: paginationMeta },
-  } = response;
-
-  return {
-    data: posts.map(({ id, attributes }) => ({ id, ...attributes })),
-    meta: paginationMeta,
-  };
+  return response.data;
 }
 
-async function getPosts() {
-    const response = await postService.getAll();
+export async function getPosts() {
+  const response = await postService.getAll();
 
   if (!response) return null;
 
-  const {
-    data: { data: posts, meta: paginationMeta },
-  } = response;
-
-  return {
-    data: posts.map(({ id, attributes }) => ({ id, ...attributes })),
-    meta: paginationMeta,
-  };
+  return response.data;
 }
 
-async function getLatestPosts() {
-    const response = await postService.getRecents();
+export async function getPostBySlug(slug?: string) {
+  if (!slug) return;
+
+  const response = await postService.getBySlug(slug);
 
   if (!response) return null;
 
-  const {
-    data: { data: posts, meta: paginationMeta },
-  } = response;
-
-  return {
-    data: posts.map(({ id, attributes }) => ({ id, ...attributes })),
-    meta: paginationMeta,
-  };
+  return response.data;
 }
 
-export default {
-  getCollection,
-  getPosts,
-  getLatestPosts,
-  getPaginatedPosts,
-};
+export async function getLatestPosts() {
+  const response = await postService.getRecents();
+
+  console.log({response})
+
+  if (!response) return null;
+
+  return response.data;
+}

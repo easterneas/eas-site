@@ -1,0 +1,29 @@
+---
+import store from "../../../store";
+
+import Base from "@/layouts/Base.astro";
+import BlogPost from "../../../components/blog/BlogPost.astro";
+
+const { slug = "" } = Astro.params;
+
+let post: Partial<Post> = {};
+
+try {
+  const response = await store.posts.getPostBySlug(slug);
+  if (response) {
+    post = response.data;
+  }
+} catch (e) {
+  console.trace(e);
+}
+
+const postMeta: BaseLayoutProps['meta'] = {
+  slug,
+  title: post.title,
+  excerpt: post.excerpt as string,
+};
+---
+
+<Base meta={postMeta}>
+  <BlogPost post={post as Post} />
+</Base>

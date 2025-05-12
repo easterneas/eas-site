@@ -19,10 +19,7 @@ export default {
       data: { data, meta: paginationMeta },
     } = response;
 
-    const portfolios = data.map(
-      ({ id, attributes }) => ({ id, ...attributes } satisfies Portfolio)
-    )
-    .sort(
+    const portfolios = data.sort(
       (a, b) => Date.parse(a.publishedAt) - Date.parse(b.publishedAt)
     )
 

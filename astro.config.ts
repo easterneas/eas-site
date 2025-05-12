@@ -4,16 +4,37 @@
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
 import tailwind from "@astrojs/tailwind";
-import { defineConfig, type AstroUserConfig } from "astro/config";
+import { defineConfig, passthroughImageService } from "astro/config";
+import yaml from "@rollup/plugin-yaml";
+import cloudflare from "@astrojs/cloudflare";
+import { loadEnv } from "vite";
 
-import { resolve } from "path";
+import { resolve } from "node:path";
 
-const config: AstroUserConfig = {
-  compressHTML: process.env.NODE_ENV === "production",
-  output: "static",
+loadEnv(`${process.env.NODE_ENV}`, process.cwd(), "");
+
+// https://astro.build/config
+export default defineConfig({
+  adapter: cloudflare({
+    imageService: "passthrough",
+    platformProxy: {
+      enabled: true
+    }
+  }),
+  image: {
+    service: passthroughImageService(),
+  },
+  compressHTML: false,
+  // compressHTML: process.env.NODE_ENV === "production",
+  // site: process.env.PUBLIC_SITE_URL,
+  output: "server",
   vite: {
+    plugins: [yaml()],
+    ssr: {
+      external: ["node:buffer", "rollup"],
+    },
     build: {
-      outDir: "build",
+      outDir: "dist",
     },
     resolve: {
       alias: [
@@ -38,11 +59,4 @@ const config: AstroUserConfig = {
   redirects: {
     "/blog": "/blog/1",
   },
-};
-
-if (process.env.NODE_ENV === "production") {
-  config.site = "https://eas.web.id";
-}
-
-// https://astro.build/config
-export default defineConfig(config);
+});

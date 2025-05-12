@@ -1,11 +1,11 @@
-import type { AxiosResponse } from "axios";
-
+import type { ResponseData } from "./base/Service";
 import serviceUrls from ".";
 import { Service } from "./base/Service";
+import type { StrapiResponse } from "types/base/StrapiResponse";
 
 export const portfolioService = {
   getAll: async (): Promise<
-    AxiosResponse<StrapiArrayResponse<Portfolio>, unknown>
+    ResponseData<StrapiResponse<Portfolio[]>>
   > => {
     return new Service(
       serviceUrls.portfolioPath(
@@ -15,7 +15,7 @@ export const portfolioService = {
   },
 
   getOne: async (): Promise<
-    AxiosResponse<StrapiSingleResponse<unknown>, unknown>
+    ResponseData<StrapiResponse<Portfolio>>
   > => {
     return new Service(serviceUrls.portfolioPath()).getWithoutToken({});
   },

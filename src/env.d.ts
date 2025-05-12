@@ -1,5 +1,12 @@
 /// <reference types="astro/client" />
 
+// Add this declaration for process.env
+declare namespace NodeJS {
+  interface ProcessEnv {
+    NODE_ENV: 'development' | 'production' | 'test';
+  }
+}
+
 interface ImportMetaEnv {
   readonly PUBLIC_API_URL: string;
   readonly PUBLIC_SITE_URL: string;
