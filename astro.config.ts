@@ -4,27 +4,46 @@
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
 import tailwind from "@astrojs/tailwind";
-import { defineConfig, passthroughImageService } from "astro/config";
+import { defineConfig, envField, passthroughImageService } from "astro/config";
 import yaml from "@rollup/plugin-yaml";
 import cloudflare from "@astrojs/cloudflare";
 import { loadEnv } from "vite";
 
 import { resolve } from "node:path";
 
-loadEnv(`${process.env.NODE_ENV}`, process.cwd(), "");
+const { ALLOWED_HOSTS, API_TOKEN } = loadEnv(`${process.env.NODE_ENV}`, process.cwd(), "");
+
+const allowedHosts = JSON.parse(ALLOWED_HOSTS ?? "")
+
+console.log({allowedHosts, API_TOKEN})
 
 // https://astro.build/config
 export default defineConfig({
   adapter: cloudflare({
     imageService: "passthrough",
     platformProxy: {
-      enabled: true
-    }
+      enabled: true,
+    },
   }),
   image: {
     service: passthroughImageService(),
   },
   compressHTML: false,
+  env: {
+    schema: {
+      API_TOKEN: envField.string({ context: "server", access: "secret" }),
+      PUBLIC_API_URL: envField.string({
+        context: "client",
+        access: "public",
+        default: process.env.PUBLIC_API_URL,
+      }),
+      PUBLIC_SITE_NAME: envField.string({
+        context: "client",
+        access: "public",
+        default: process.env.PUBLIC_SITE_NAME,
+      }),
+    },
+  },
   // compressHTML: process.env.NODE_ENV === "production",
   // site: process.env.PUBLIC_SITE_URL,
   output: "server",
@@ -44,6 +63,9 @@ export default defineConfig({
         },
       ],
     },
+    server: {
+      allowedHosts
+    }
   },
   integrations: [
     preact({ compat: true }),
