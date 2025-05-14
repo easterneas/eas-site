@@ -4,42 +4,35 @@ import { Service } from "./base/Service";
 import type { StrapiResponse } from "types/base/StrapiResponse";
 
 export const postService = {
-  getAllPaginated: async (): Promise<
-    ResponseData<StrapiResponse<Post[]>>
-  > => {
+  getAllPaginated: async (): Promise<ResponseData<StrapiResponse<Post[]>>> => {
     return new Service(
       serviceUrls.postPath("?sort[0]=published:desc&sort[1]=publishedAt:desc"),
-    ).getWithoutToken({});
+    ).get({});
   },
 
-  getAll: async (): Promise<
-    ResponseData<StrapiResponse<Post[]>>
-  > => {
+  getAll: async (): Promise<ResponseData<StrapiResponse<Post[]>>> => {
     return new Service(
-      serviceUrls.postPath("?sort[0]=published:desc&sort[1]=publishedAt:desc&pagination[pageSize]=999999&pagination[withCount]=false"),
-    ).getWithoutToken({});
+      serviceUrls.postPath(
+        "?sort[0]=published:desc&sort[1]=publishedAt:desc&pagination[pageSize]=999999&pagination[withCount]=false",
+      ),
+    ).get({});
   },
 
-  getRecents: async (): Promise<
-    ResponseData<StrapiResponse<Post[]>>
-  > => {
+  getRecents: async (): Promise<ResponseData<StrapiResponse<Post[]>>> => {
     return new Service(
-      serviceUrls.postPath("?sort[0]=published:desc&sort[1]=publishedAt:desc&pagination[pageSize]=3&pagination[withCount]=false"),
-    ).getWithoutToken({});
+      serviceUrls.postPath(
+        "?sort[0]=published:desc&sort[1]=publishedAt:desc&pagination[pageSize]=3&pagination[withCount]=false",
+      ),
+    ).get({});
   },
 
-  getOne: async (): Promise<
-    ResponseData<StrapiResponse<Post>>
-  > => {
-    return new Service(serviceUrls.postPath()).getWithoutToken({});
+  getOne: async (): Promise<ResponseData<StrapiResponse<Post>>> => {
+    return new Service(serviceUrls.postPath()).get({});
   },
 
   getBySlug: async (
     slug: string,
   ): Promise<ResponseData<StrapiResponse<Post>>> => {
-    console.log(serviceUrls.onePostPath(slug))
-    return new Service(
-      serviceUrls.onePostPath(slug),
-    ).getWithoutToken({});
+    return new Service(serviceUrls.onePostPath(slug)).get({});
   },
 };
