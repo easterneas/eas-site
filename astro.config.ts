@@ -15,8 +15,6 @@ const { ALLOWED_HOSTS, API_TOKEN, PUBLIC_SITE_URL } = loadEnv(`${process.env.NOD
 
 const allowedHosts = ALLOWED_HOSTS ? JSON.parse(ALLOWED_HOSTS) : [PUBLIC_SITE_URL]
 
-console.log({allowedHosts, API_TOKEN})
-
 // https://astro.build/config
 export default defineConfig({
   adapter: cloudflare({
