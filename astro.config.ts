@@ -11,9 +11,9 @@ import { loadEnv } from "vite";
 
 import { resolve } from "node:path";
 
-const { ALLOWED_HOSTS, API_TOKEN } = loadEnv(`${process.env.NODE_ENV}`, process.cwd(), "");
+const { ALLOWED_HOSTS, API_TOKEN, PUBLIC_SITE_URL } = loadEnv(`${process.env.NODE_ENV}`, process.cwd(), "");
 
-const allowedHosts = JSON.parse(ALLOWED_HOSTS ?? "")
+const allowedHosts = ALLOWED_HOSTS ? JSON.parse(ALLOWED_HOSTS) : [PUBLIC_SITE_URL]
 
 console.log({allowedHosts, API_TOKEN})
 
