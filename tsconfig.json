@@ -31,7 +31,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "types", "./src/env.d.ts"],
+  "include": [
+    ".astro/types.d.ts",
+    "src",
+    "types",
+    "./src/env.d.ts"
+  ],
   "exclude": ["node_modules"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
