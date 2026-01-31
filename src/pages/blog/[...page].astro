@@ -5,8 +5,6 @@ import Base from "@/layouts/Base.astro";
 
 import store from "@/store";
 
-import { PencilLineIcon } from "lucide-react";
-
 let posts: Post[] = [];
 
 try {
@@ -30,7 +28,7 @@ const pageMeta = {
 
 <Base meta={pageMeta}>
   <div class="grid gap-8">
-    <PageHeader Icon={PencilLineIcon}>Blog</PageHeader>
+    <PageHeader>Blog</PageHeader>
 
     <p>{mdString}</p>
 
