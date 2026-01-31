@@ -11,7 +11,17 @@ import { loadEnv } from "vite";
 
 import { resolve } from "node:path";
 
-const { ALLOWED_HOSTS, API_TOKEN, PUBLIC_SITE_URL } = loadEnv(`${process.env.NODE_ENV}`, process.cwd(), "");
+const {
+  ALLOWED_HOSTS,
+  API_TOKEN,
+  PUBLIC_SITE_URL,
+  PUBLIC_SITE_NAME,
+  PUBLIC_API_URL
+} = loadEnv(
+  `${process.env.NODE_ENV}`,
+  process.cwd(),
+  ""
+);
 
 const allowedHosts = ALLOWED_HOSTS ? JSON.parse(ALLOWED_HOSTS) : [PUBLIC_SITE_URL]
 
@@ -29,16 +39,21 @@ export default defineConfig({
   compressHTML: false,
   env: {
     schema: {
-      API_TOKEN: envField.string({ context: "server", access: "secret" }),
+      API_TOKEN: envField.string({ context: "server", access: "secret", default: API_TOKEN }),
       PUBLIC_API_URL: envField.string({
         context: "client",
         access: "public",
-        default: process.env.PUBLIC_API_URL,
+        default: PUBLIC_API_URL,
       }),
       PUBLIC_SITE_NAME: envField.string({
         context: "client",
         access: "public",
-        default: process.env.PUBLIC_SITE_NAME,
+        default: PUBLIC_SITE_NAME,
+      }),
+      PUBLIC_SITE_URL: envField.string({
+        context: "client",
+        access: "public",
+        default: PUBLIC_SITE_URL,
       }),
     },
   },
@@ -50,9 +65,9 @@ export default defineConfig({
     ssr: {
       external: ["node:buffer", "rollup"],
     },
-    build: {
-      outDir: "dist",
-    },
+    // build: {
+    //   outDir: "dist",
+    // },
     resolve: {
       alias: [
         {
