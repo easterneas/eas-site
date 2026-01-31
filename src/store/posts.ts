@@ -5,7 +5,7 @@ export async function getCollection() {
     const collections = await postService.getAll();
     return collections;
   } catch (e) {
-    console.trace(e);
+    console.error(e);
   } finally {
   }
 }

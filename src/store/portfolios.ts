@@ -5,7 +5,7 @@ async function getCollection() {
     const collections = await portfolioService.getAll();
     return collections;
   } catch (e) {
-    console.trace(e);
+    console.error(e);
   }
 }
 
@@ -22,8 +22,6 @@ export default {
     const portfolios = data.sort(
       (a, b) => Date.parse(a.publishedAt) - Date.parse(b.publishedAt)
     )
-
-    console.log(portfolios,paginationMeta,data)
 
     return {
       data: portfolios,
