@@ -11,7 +11,16 @@ export interface Props {
 const { post } = Astro.props;
 const { title: postTitle, published, postContent } = post;
 const tags: string[] = [];
+const hasHeroImage = !!post.hero; // Adjust based on your backend field
 ---
+
+{hasHeroImage && (
+  <div
+    class="hero-image w-full h-[300px] bg-cover bg-center rounded-lg mb-8"
+    style={`background-image: url(${post.hero})`}
+    transition:name="hero-image"
+  />
+)}
 
 <div class="grid gap-[24px] relative">
   <div class="relative flex gap-4 sm:block items-start justify-start">
