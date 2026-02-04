@@ -1,12 +1,8 @@
 ---
 import { MENU_ITEMS } from "@/constants/base";
 import Logo from "../Logo.astro";
-
-const currentURL = new URL(Astro.request.url).href;
-// const currentURL = "new URL(Astro.request.url).href";
 ---
-
-<div class="sm:order-1 order-2 bg-darkSecondary border-r-[1px] border-r-[#fc0]">
+<nav class="order-2 sm:order-none fixed sm:inset-y-0 sm:left-0 sm:w-[120px] z-[100] bg-darkSecondary border-r-[1px] border-r-[#fc0]" id="main-nav">
   <ul class="nav__menu">
     {
       MENU_ITEMS.map((item, i) => {
@@ -24,13 +20,9 @@ const currentURL = new URL(Astro.request.url).href;
 
         return (
           <li
-            class={[
-              "nav__menu-item",
-              currentURL.split("/").includes(item.link.split("/")[1])
-                ? "active"
-                : "",
-            ].join(" ")}
+            class="nav__menu-item"
             style={`order: ${i}`}
+            data-nav-path={item.link}
           >
             <a href={item.link}>{item.name}</a>
           </li>
@@ -38,4 +30,4 @@ const currentURL = new URL(Astro.request.url).href;
       })
     }
   </ul>
-</div>
+</nav>
