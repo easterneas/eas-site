@@ -1,4 +1,5 @@
 import { ServiceError } from "./ServiceError";
+import { API_TOKEN } from "astro:env/server";
 
 // Define our own types to replace Axios types
 type Method = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
@@ -23,13 +24,12 @@ export interface ResponseData<T = any> {
 
 export class Service {
   url: string;
-  token: string = import.meta.env.API_TOKEN;
+  token: string | undefined = API_TOKEN;
   config: RequestConfig;
   abortController: AbortController;
 
-  constructor(url: string, token?: string) {
+  constructor(url: string) {
     this.url = url;
-    this.token = token || import.meta.env.API_TOKEN;
     this.abortController = new AbortController();
     this.config = {
       headers: {
