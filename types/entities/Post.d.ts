@@ -9,6 +9,7 @@ type Post = Timestamp & {
   created: string | null;
   updated: string | null;
   published: string | null;
+  hero: string | null;
 
   title: string;
   slug: string;
