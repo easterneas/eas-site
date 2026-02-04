@@ -1,9 +1,6 @@
 ---
 import "@/global.css";
 import "./styles/base-typography.css";
-// import "@/scss/blog.scss";
-// import "@/scss/global.scss";
-// import "@/scss/typography.scss";
 
 import Footer from "@/components/layout/Footer.astro";
 import Head from "@/components/layout/Head.astro";
@@ -18,19 +15,174 @@ const { meta } = Astro.props;
 <html lang={"en"}>
   <head>
     <Head title={meta.title} description={meta.excerpt} permalink="" />
-    <ClientRouter />
+    <ClientRouter fallback="animate" />
+
+    <style is:global>
+      /* Your original aggressive slides + sidebar-safe tweaks */
+      @keyframes slideFromRight {
+        from {
+          transform: translateX(120px);  /* Start beyond sidebar */
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideToLeft {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(-120px);  /* Out left, clear of sidebar */
+          opacity: 0;
+        }
+      }
+
+      @keyframes slideFromLeft {
+        from {
+          transform: translateX(-120px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideToRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(120px);
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+
+      /* Main content transitions (fallback) */
+      #main-content {
+        position: relative;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform, opacity;
+      }
+
+      /* LOCK DOWN SIDEBAR - Give it its own VT layer */
+      #main-nav {
+        z-index: 999 !important;
+        position: fixed !important;
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+        view-transition-name: sidebar; /* Give it a name so it enters VT layer */
+      }
+
+      /* During transition: Sidebar stays put */
+      html.page-transitioning #main-nav {
+        z-index: 999 !important;
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+        view-transition-name: sidebar;
+      }
+
+      /* Sidebar transition - INSTANT/NO-OP so it doesn't animate */
+      @supports (view-transition-name: none) {
+        ::view-transition-group(sidebar) {
+          animation-duration: 0s !important; /* No animation for sidebar */
+          z-index: 9999; /* Above content transitions */
+        }
+
+        ::view-transition-old(sidebar),
+        ::view-transition-new(sidebar) {
+          animation: none !important;
+          opacity: 1 !important;
+        }
+      }
+
+
+      /* Page states */
+      html.page-transitioning #main-content { opacity: 0; }
+      html.page-transitioning.forward #main-content { transform: translateX(60px); }
+      html.page-transitioning.back #main-content { transform: translateX(-60px); }
+      html:not(.page-transitioning) #main-content { opacity: 1; transform: translateX(0); }
+
+      /* VT API (Chrome/Safari) */
+      @supports (view-transition-name: none) {
+        html:not(.force-css-transitions)::view-transition-old(root) {
+          animation: fadeOut 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html:not(.force-css-transitions)::view-transition-new(root) {
+          animation: fadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Forward */
+        html.forward:not(.force-css-transitions)::view-transition-old(root) {
+          animation: slideToLeft 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html.forward:not(.force-css-transitions)::view-transition-new(root) {
+          animation: slideFromRight 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Back/Revert */
+        html.back:not(.force-css-transitions)::view-transition-old(root) {
+          animation: slideToRight 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html.back:not(.force-css-transitions)::view-transition-new(root) {
+          animation: slideFromLeft 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Hero Image - Staggered transitions */
+        /* EXIT (leaving page): Hero fades out FAST (0.2s), content waits */
+        html:not(.force-css-transitions)::view-transition-old(hero-image) {
+          animation: fadeOut 0.2s ease-out forwards;
+        }
+        /* ENTER (arriving at page): Content first, hero fades in after 0.25s delay */
+        html:not(.force-css-transitions)::view-transition-new(hero-image) {
+          animation: fadeIn 0.3s ease-in 0.25s forwards;
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        html { scroll-behavior: smooth; }
+      }
+
+      /* Debug badge (toggle display:none if annoying) */
+      #transition-debug {
+        /* Your original debug styles */
+        position: fixed; bottom: 20px; right: 20px; /* etc. */
+      }
+    </style>
   </head>
 
-  <body class="grid grid-cols-1 sm:grid-cols-[120px_1fr] h-screen w-screen bg-darkPrimary">
-    <Navigator />
+  <body class="h-screen w-screen bg-darkPrimary overflow-hidden">
+    <Navigator transition:persist />
 
-    <div class="order-1 sm:order-2 overflow-y-auto grid justify-center w-full">
-      <div class="p-8 w-screen sm:w-[calc(100vw_-_120px)] sm:max-w-[800px] sm:mx-auto">
+    <div
+      class="overflow-y-auto grid justify-center w-full sm:ml-[120px] h-full"
+      id="main-content"
+      transition:animate="slide"
+    >
+      <div class="p-8 w-full max-w-[800px] mx-auto min-h-screen">
         <div class="grid gap-8">
           <slot />
         </div>
 
-        <Footer />
+        <Footer transition:name="main-footer" />
       </div>
     </div>
   </body>
